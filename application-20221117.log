@@ -1,0 +1,6 @@
+2022-11-17 11:07:17.240 [main] DEBUG Main - We've just greeted the user!
+2022-11-17 11:07:17.242 [main] INFO  Main - We've just greeted the user!
+2022-11-17 11:07:17.242 [main] WARN  Main - We've just greeted the user!
+2022-11-17 11:07:17.242 [main] ERROR Main - We've just greeted the user!
+2022-11-17 11:07:17.242 [main] FATAL Main - We've just greeted the user!
+2022-11-17 11:13:56.769 [main] INFO  Main - We've just greeted the user!
