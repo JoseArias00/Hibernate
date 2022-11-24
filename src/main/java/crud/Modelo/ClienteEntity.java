@@ -1,19 +1,20 @@
 package crud.Modelo;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-/**
- * @author Jose María
- * Clase modelo de los Clientes
- */
 @Entity
-@Table(name = "clientes", schema = "agendaproconsi", catalog = "")
-public class ClienteEntity {
-
+@Table(name = "clientes", schema = "agendaproconsi")
+public class ClienteEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "ClienteID",nullable = false)
+    private int clienteId;
+
     @Column(name = "DNI",nullable = false)
     private String dni;
 
@@ -25,6 +26,20 @@ public class ClienteEntity {
 
     @Column(name = "FechaAlta",nullable = false)
     private Timestamp fechaAlta;
+
+    @Column(name = "Tipo",nullable = false)
+    private byte tipo;
+
+    @Column(name = "CuotaMaxima")
+    private BigDecimal cuotaMaxima;
+
+    public int getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(int clienteId) {
+        this.clienteId = clienteId;
+    }
 
     public String getDni() {
         return dni;
@@ -58,12 +73,36 @@ public class ClienteEntity {
         this.fechaAlta = fechaAlta;
     }
 
+    public byte getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(byte tipo) {
+        this.tipo = tipo;
+    }
+
+    public BigDecimal getCuotaMaxima() {
+        return cuotaMaxima;
+    }
+
+    public void setCuotaMaxima(BigDecimal cuotaMaxima) {
+        this.cuotaMaxima = cuotaMaxima;
+    }
+
+    public ClienteEntity() {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClienteEntity that = (ClienteEntity) o;
-        return Objects.equals(dni, that.dni) && Objects.equals(nombre, that.nombre) && Objects.equals(apellidos, that.apellidos) && Objects.equals(fechaAlta, that.fechaAlta);
+        return clienteId == that.clienteId && tipo == that.tipo && Objects.equals(dni, that.dni) && Objects.equals(nombre, that.nombre) && Objects.equals(apellidos, that.apellidos) && Objects.equals(fechaAlta, that.fechaAlta) && Objects.equals(cuotaMaxima, that.cuotaMaxima);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(clienteId, dni, nombre, apellidos, fechaAlta, tipo, cuotaMaxima);
+    }
 }
