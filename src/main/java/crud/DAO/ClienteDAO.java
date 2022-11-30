@@ -2,68 +2,119 @@ package crud.DAO;
 
 import crud.IDAO.IClienteDAO;
 import crud.Modelo.ClienteEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.List;
 
 public class ClienteDAO implements IClienteDAO, Serializable {
-    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("proconsiHibernate");
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("proconsiHibernate");
+    private EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+    private CriteriaBuilder cbuilder = entityManager.getCriteriaBuilder();
+    private CriteriaQuery<ClienteEntity> cquery = cbuilder.createQuery(ClienteEntity.class);
+    //Creamos el tipo root de querys que referencia a la clase ClientesEntity
+    private Root<ClienteEntity> cliente = cquery.from(ClienteEntity.class);
+
+    private Logger logger = LogManager.getLogger(ClienteDAO.class);
+
 
     @Override
-    public void insertarCliente(ClienteEntity cliente) {
-        this.entityManager.getTransaction().begin();
-        this.entityManager.persist(cliente);
-        this.entityManager.getTransaction().commit();
+    public void insertCliente(ClienteEntity cliente) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(cliente);
+
+        logger.info("Creado cliente con DNI: " + cliente.getDni() + ".");
+        entityManager.getTransaction().commit();
     }
 
     @Override
-    public List<ClienteEntity> obtenerClientes() {
-        //Inicializamos un criteria builder para las futuruas querys
-        CriteriaBuilder cbuilder = entityManager.getCriteriaBuilder();
-
-        //Creamos la query que usaremos luego para recuperar clientes
-        CriteriaQuery<ClienteEntity> cquery = cbuilder.createQuery(ClienteEntity.class);
-
-        //Creamos el tipo root de querys que referencia a la clase ClientesEntity
-        Root<ClienteEntity> cliente = cquery.from(ClienteEntity.class);
-
-        //Indicamos que la query seleccionará todos los clientes de la clase ClienteEntity que referencia a la tabla Clientes en MySQL
+    public List<ClienteEntity> getClientes() {
         cquery.select(cliente);
+        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
 
-        //Creamos una typedQuery ya que ya conocemos el tipo de dato devuelto por la query para ahorrarnos posibles casteos y la ejecutamos
-        TypedQuery<ClienteEntity> tquery = entityManager.createQuery(cquery);
+        entityManager.clear();
 
-        //Almacenamos los clientes obtenidos en una lista la cual devolverá el método
-        List<ClienteEntity> clientes = tquery.getResultList();
-
+        logger.info("Completada la solicitud del listado de todos los clientes.");
         return clientes;
     }
 
     @Override
-    public ClienteEntity obtenerCliente() {
-        return null;
+    public List<ClienteEntity> getClientes(String orden) {
+        cquery.select(cliente).orderBy(cbuilder.asc(cliente.get(orden)));
+        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+
+        entityManager.clear();
+
+        logger.info("Completada la solicitud del listado de todos los clientes.");
+        return clientes;
     }
 
     @Override
-    public void borrarClientes() {
+    public void removeCliente(final String DNI) {
+        Predicate condicion = cbuilder.equal(this.cliente.get("dni"), DNI);
+        cquery.select(this.cliente).where(condicion);
+        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+
+        entityManager.getTransaction().begin();
+
+        for (ClienteEntity contadorCliente : clientes) {
+            entityManager.remove(contadorCliente);
+        }
+
+        logger.info("El cliente con DNI: " + DNI + ", ha sido borrado.");
+        entityManager.getTransaction().commit();
 
     }
 
     @Override
-    public void editarCliente() {
+    public void removeTodos() {
+        cquery.select(this.cliente);
+        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
 
+        entityManager.getTransaction().begin();
+
+        for (ClienteEntity contadorCliente : clientes) {
+            entityManager.remove(contadorCliente);
+        }
+
+        logger.info("Todas los clientes de la base de datos han sido borrados.");
+        entityManager.getTransaction().commit();
     }
 
     @Override
-    public List<ClienteEntity> listarClientes() {
-        return null;
+    public void setCliente(final ClienteEntity cliente) {
+        String campoNombre = "nombre";
+        String campoApellidos = "apellidos";
+        String campoFechaAlta = "fechaAlta";
+        String campoTipo = "tipo";
+        String campoCuotaMaxima = "cuotaMaxima";
+
+        Predicate condicion = cbuilder.equal(this.cliente.get("dni"), cliente.getDni());
+        CriteriaUpdate<ClienteEntity> update = cbuilder.createCriteriaUpdate(ClienteEntity.class);
+        Root root = update.from(ClienteEntity.class);
+
+        entityManager.getTransaction().begin();
+        //cquery.select(this.cliente).where(condicion);
+
+        update.set(campoNombre, cliente.getNombre());
+        update.set(campoApellidos, cliente.getApellidos());
+        update.set(campoFechaAlta, cliente.getFechaAlta());
+        update.set(campoTipo, cliente.getTipo());
+        if (cliente.getTipo() == 0) {
+            update.set(campoCuotaMaxima, cliente.getCuotaMaxima());
+        }
+        update.where(condicion);
+        this.entityManager.createQuery(update).executeUpdate();
+        if (logger.isInfoEnabled()) {
+            logger.info("El cliente con DNI: " + cliente.getDni() + ", ha sido modificado.");
+        }
+        entityManager.getTransaction().commit();
     }
+
 }
