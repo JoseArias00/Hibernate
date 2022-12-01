@@ -5,7 +5,7 @@ import crud.Servicio.OpcionesOrdenacion;
 
 import java.util.List;
 
-public interface IClienteDAO<T> {
+public interface IClienteDAO {
 
     //Método para añadir clientes
     public void insertCliente(final ClienteEntity cliente);

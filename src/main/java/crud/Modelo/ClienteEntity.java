@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -12,22 +11,22 @@ import java.util.Objects;
 public class ClienteEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ClienteID",nullable = false)
+    @Column(name = "ClienteID")
     private int clienteId;
 
-    @Column(name = "DNI",nullable = false)
+    @Column(name = "DNI")
     private String dni;
 
-    @Column(name = "Nombre",nullable = false)
+    @Column(name = "Nombre")
     private String nombre;
 
-    @Column(name = "Apellidos",nullable = false)
+    @Column(name = "Apellidos")
     private String apellidos;
 
-    @Column(name = "FechaAlta",nullable = false)
+    @Column(name = "FechaAlta")
     private Timestamp fechaAlta;
 
-    @Column(name = "Tipo",nullable = false)
+    @Column(name = "Tipo")
     private byte tipo;
 
     @Column(name = "CuotaMaxima")
