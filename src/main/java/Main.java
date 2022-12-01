@@ -1,6 +1,7 @@
 import crud.DAO.ClienteDAO;
 import crud.Modelo.ClienteEntity;
 import crud.Servicio.CondicionesClientes;
+import crud.Servicio.OpcionesOrdenacion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,23 +20,21 @@ public class Main {
         logger.info("Prueba de la persistencia");
         LocalDateTime fecha = LocalDateTime.now();
         ClienteEntity clienteEntity = new ClienteEntity();
-        clienteEntity.setDni("1234555L");
-        clienteEntity.setNombre("Pepito");
+        clienteEntity.setClienteId(21);
+        clienteEntity.setDni("1114589L");
+        clienteEntity.setNombre("Mario");
         clienteEntity.setApellidos("Pedro");
         clienteEntity.setFechaAlta(Timestamp.valueOf(fecha));
         clienteEntity.setTipo((byte) REGISTRADO.ordinal());
         ClienteDAO clienteDAO = new ClienteDAO();
 
-        logger.info("Insertamos un cliente de prueba en bbdd");
-        clienteDAO.insertCliente(clienteEntity);
+        //clienteDAO.insertCliente(clienteEntity);
 
-        //logger.info("Obtenemos los clientes de la base de datos");
-        //List<ClienteEntity> lista = clienteDAO.getClientes("fechaAlta");
+        //List<ClienteEntity> lista = clienteDAO.getClientes(OpcionesOrdenacion.dni);
 
-        //logger.info("Borramos el cliente de la base de datos");
         //clienteDAO.removeCliente(clienteEntity.getDni());
 
-        //clienteDAO.setCliente(clienteEntity);
+        clienteDAO.setCliente(clienteEntity,false);
 
         //clienteDAO.removeTodos();
     }
