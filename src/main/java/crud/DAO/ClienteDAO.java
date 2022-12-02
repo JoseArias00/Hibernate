@@ -163,9 +163,11 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      */
     @Override
     public void setCliente(final ClienteEntity cliente, final boolean todasInstancias) {
+        String dni = "dni";
+        String clienteId = "clienteId";
         Predicate condicion = (todasInstancias) ?
-                cbuilder.equal(this.cliente.get("dni"), cliente.getDni()) :
-                cbuilder.equal(this.cliente.get("clienteId"), cliente.getClienteId());
+                cbuilder.equal(this.cliente.get(dni), cliente.getDni()) :
+                cbuilder.equal(this.cliente.get(clienteId), cliente.getClienteId());
 
         entityManager.getTransaction().begin();
         cquery.select(this.cliente).where(condicion);

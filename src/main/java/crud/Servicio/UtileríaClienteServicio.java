@@ -43,6 +43,7 @@ public class UtileríaClienteServicio {
         String DNI = "\\d{8}[a-zA-Z]$";
         String NIE = "[x|y|z|X|Y|Z]\\d{7}[A-HJ-NP-TV-Za-hj-np-tv-z]$";
 
+        //TODO comprobar NIE
         if (Pattern.matches(DNI, identificador)) {
             return validarLetraDNI(identificador);
         }
