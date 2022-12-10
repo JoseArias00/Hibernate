@@ -14,7 +14,8 @@
             <!--<property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>-->
             <property name="hibernate.connection.username" value="root"/>
             <property name="hibernate.connection.password" value="root"/>
-            <!--<property name="hibernate.show_sql" value="true"/>-->
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="log4j.logger.org.hibernate.SQL" value="false"/>
             <!--<property name="hibernate.format_sql" value="true"/>-->
         </properties>
     </persistence-unit>

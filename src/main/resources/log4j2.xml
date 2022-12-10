@@ -2,16 +2,20 @@
 <Configuration status="INFO">
     <Appenders>
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+            <PatternLayout pattern="[%t] %-5level %logger{36} - %msg%n" />
+            <!--%d{HH:mm:ss.SSS}-->
         </Console>
-        <File name="FileAppender" fileName="application-${date:yyyyMMdd}.log" immediateFlush="false" append="true">
+        <RollingFile name="RollingFile" fileName="logs.log" filePattern="logs/app-%d{MM-dd-yyyy}.log.gz"
+                     ignoreExceptions="false">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>
+            <TimeBasedTriggeringPolicy/>
+        </RollingFile>
     </Appenders>
     <Loggers>
+        <Logger name="org.hibernate" level="error"/>
         <Root level="INFO">
-            <AppenderRef ref="ConsoleAppender" />
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="RollingFile"/>
         </Root>
     </Loggers>
 </Configuration>

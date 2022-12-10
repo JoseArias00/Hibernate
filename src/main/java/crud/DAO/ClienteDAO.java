@@ -28,15 +28,15 @@ public class ClienteDAO implements IClienteDAO, Serializable {
     /**
      * Variables finales inicializadas para realizar consultas con criteria contra la base de datos
      */
-    private final CriteriaBuilder cbuilder = entityManager.getCriteriaBuilder();
-    private final CriteriaQuery<ClienteEntity> cquery = cbuilder.createQuery(ClienteEntity.class);
+    private final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    private final CriteriaQuery<ClienteEntity> criteriaQuery = criteriaBuilder.createQuery(ClienteEntity.class);
     //Creamos el tipo root de querys que referencia a la clase ClientesEntity
-    private final Root<ClienteEntity> cliente = cquery.from(ClienteEntity.class);
+    private final Root<ClienteEntity> cliente = criteriaQuery.from(ClienteEntity.class);
 
     /**
      * Inicializado el logger a usar en la clase
      */
-    private final Logger logger = LogManager.getLogger(ClienteDAO.class);
+    private static final Logger LOGGER = LogManager.getLogger(ClienteDAO.class);
 
     /**
      * @param cliente Cliente a insertar en la base de datos
@@ -50,8 +50,8 @@ public class ClienteDAO implements IClienteDAO, Serializable {
 
         entityManager.getTransaction().commit();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Creado cliente con DNI: " + cliente.getDni() + ".");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Creado cliente con DNI: " + cliente.getDni() + ".");
         }
     }
 
@@ -60,13 +60,13 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      */
     @Override
     public List<ClienteEntity> getClientes() {
-        cquery.select(cliente);
-        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+        criteriaQuery.select(cliente);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
         entityManager.clear();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Completada la solicitud del listado de todos los clientes.");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Completada la solicitud del listado de todos los clientes.");
         }
 
         return clientes;
@@ -78,13 +78,13 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      */
     @Override
     public List<ClienteEntity> getClientes(final OpcionesOrdenacion orden) {
-        cquery.select(cliente).orderBy(cbuilder.asc(cliente.get(orden.toString())));
-        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+        criteriaQuery.select(cliente).orderBy(criteriaBuilder.asc(cliente.get(orden.toString())));
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
         entityManager.clear();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Completada la solicitud del listado de todos los clientes ordenados por el campo: " + orden);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Completada la solicitud del listado de todos los clientes ordenados por el campo: " + orden);
         }
 
         return clientes;
@@ -96,14 +96,14 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      */
     @Override
     public List<ClienteEntity> getCliente(final String DNI) {
-        Predicate condicion = cbuilder.equal(this.cliente.get("dni"), DNI);
-        cquery.select(this.cliente).where(condicion);
-        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), DNI);
+        criteriaQuery.select(this.cliente).where(condicion);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
         entityManager.clear();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Se han recuperado todas las instancias de la base de datos del cliente con DNI: " + DNI);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Se han recuperado todas las instancias de la base de datos del cliente con DNI: " + DNI);
         }
 
         return clientes;
@@ -116,9 +116,9 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      */
     @Override
     public void removeCliente(final String DNI) {
-        Predicate condicion = cbuilder.equal(this.cliente.get("dni"), DNI);
-        cquery.select(this.cliente).where(condicion);
-        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), DNI);
+        criteriaQuery.select(this.cliente).where(condicion);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
         entityManager.getTransaction().begin();
 
@@ -128,8 +128,8 @@ public class ClienteDAO implements IClienteDAO, Serializable {
 
         entityManager.getTransaction().commit();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("El cliente con DNI: " + DNI + ", ha sido borrado.");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("El cliente con DNI: " + DNI + ", ha sido borrado.");
         }
     }
 
@@ -138,8 +138,8 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      */
     @Override
     public void removeTodos() {
-        cquery.select(this.cliente);
-        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+        criteriaQuery.select(this.cliente);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
         entityManager.getTransaction().begin();
 
@@ -149,8 +149,8 @@ public class ClienteDAO implements IClienteDAO, Serializable {
 
         entityManager.getTransaction().commit();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Todas los clientes de la base de datos han sido borrados.");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Todos los clientes de la base de datos han sido borrados.");
         }
     }
 
@@ -166,12 +166,12 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         String dni = "dni";
         String clienteId = "clienteId";
         Predicate condicion = (todasInstancias) ?
-                cbuilder.equal(this.cliente.get(dni), cliente.getDni()) :
-                cbuilder.equal(this.cliente.get(clienteId), cliente.getClienteId());
+                criteriaBuilder.equal(this.cliente.get(dni), cliente.getDni()) :
+                criteriaBuilder.equal(this.cliente.get(clienteId), cliente.getClienteId());
 
         entityManager.getTransaction().begin();
-        cquery.select(this.cliente).where(condicion);
-        List<ClienteEntity> clientes = entityManager.createQuery(cquery).getResultList();
+        criteriaQuery.select(this.cliente).where(condicion);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
         for (int i = 0; i < clientes.size(); i++) {
             cliente.setClienteId(clientes.get(i).getClienteId());
@@ -180,8 +180,8 @@ public class ClienteDAO implements IClienteDAO, Serializable {
 
         entityManager.getTransaction().commit();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("El cliente con DNI: " + cliente.getDni() + ", ha sido modificado.");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("El cliente con DNI: " + cliente.getDni() + ", ha sido modificado.");
         }
     }
 

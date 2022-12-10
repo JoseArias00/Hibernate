@@ -12,28 +12,32 @@ import static crud.Servicio.UtileríaClienteServicio.*;
 
 public class ClienteServicio implements IClienteServicio {
 
-    private final Logger logger = LogManager.getLogger(ClienteDAO.class);
+    private static final Logger LOGGER = LogManager.getLogger(ClienteDAO.class);
 
     @Override
-    public void insertClientes(ClienteEntity... clientes) {
-        //TODO comprobar que no se introduzcan dos clientes con exactamente los mismos campos
-        //TODO comprobar que no haya dos dni iguales con distintos nombres y apellidos
+    public void insertClientes(final ClienteEntity... clientes) {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         for (ClienteEntity contadorClientes : clientes) {
-            validarCampos(contadorClientes);
-            if (validarIdentificador(contadorClientes.getDni())) {
-                clienteDAO.insertCliente(contadorClientes);
-            } else {
-                if (logger.isInfoEnabled()) {
-                    logger.info("El cliente con DNI : " + contadorClientes.getDni() + " no se ha introducido ya que su DNI no es correcto.");
+            if (camposValidos(contadorClientes)) {
+                if (validarIdentificador(contadorClientes.getDni())) {
+                    if (!comprobarRepetecionCliente(contadorClientes)) {
+                        LOGGER.info("Cliente no repetido");
+                        if (!dniRepetido(contadorClientes)) {
+                            LOGGER.debug("Cliente con DNI distinto");
+                            clienteDAO.insertCliente(contadorClientes);
+                        }
+                    }
+                } else {
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("El cliente con DNI : " + contadorClientes.getDni() + " no se ha introducido ya que su DNI no es correcto.");
+                    }
                 }
             }
-
         }
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Añadidos todos los clientes solicitados a la base de datos.");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Añadidos todos los clientes correctos a la base de datos.");
         }
     }
 

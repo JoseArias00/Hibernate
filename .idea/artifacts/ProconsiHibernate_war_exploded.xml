@@ -31,9 +31,12 @@
           <element id="library" level="project" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:3.0.1" />
           <element id="library" level="project" name="Maven: org.glassfish.jaxb:txw2:3.0.2" />
           <element id="library" level="project" name="Maven: com.sun.istack:istack-commons-runtime:4.0.1" />
-          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.19.0" />
-          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.19.0" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.8.2" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.8.2" />
           <element id="library" level="project" name="Maven: p6spy:p6spy:3.9.1" />
+          <element id="library" level="project" name="Maven: org.jetbrains:annotations:23.1.0" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.8.2" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.24" />
         </element>
       </element>
       <element id="directory" name="META-INF">
