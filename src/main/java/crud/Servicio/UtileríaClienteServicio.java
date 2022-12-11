@@ -9,6 +9,11 @@ import java.util.regex.*;
 public class UtileríaClienteServicio {
 
     /**
+     * Constructor vacío para evitar la creación de objetos de la utilería
+     */
+    private UtileríaClienteServicio(){};
+
+    /**
      * @param cliente Cliente pasado por parámetro para validar sus campos y comprobar que no de errores
      * @throws NullPointerException Ocurre cuando algún campo del cliente o el propio es null
      */
@@ -40,7 +45,7 @@ public class UtileríaClienteServicio {
 
     /**
      * @param identificador El identificador a validar
-     * @return Si el identificador pasado por parámetro es válido y esta correctamente formado
+     * @return True si el identificador pasado por parámetro es válido y esta correctamente formado, y false en caso contrario
      * @throws NullPointerException Ocurre cuando el identificador pasado por parámetros es null
      */
     public static boolean validarIdentificador(final String identificador) throws NullPointerException {
@@ -48,16 +53,46 @@ public class UtileríaClienteServicio {
             throw new NullPointerException("El identificador pasado por parámetro es nulo");
         }
 
-        //TODO Cif
+        //TODO validar Cif
         String DNI = "\\d{8}[a-zA-Z]$";
-        String NIE = "[x|y|z|X|Y|Z]\\d{7}[A-HJ-NP-TV-Za-hj-np-tv-z]$";
+        String NIE = "[x-zX-Z]\\d{7}[A-HJ-NP-TV-Za-hj-np-tv-z]$";
+        String CIF = "^[a-zA-Z^IiÑñOoTtXxYyZz]([:digit:]{0,7}([abcdefghijABCDEFGHIJ]|[:digit:]))$";
+        boolean correcto = false;
 
         //TODO comprobar NIE
         if (Pattern.matches(DNI, identificador)) {
-            return validarLetraDNI(identificador);
+            if(validarLetraDNI(identificador)){
+                correcto = true;
+            }
+        } else if(Pattern.matches(NIE,identificador)){
+            if(validarNIE(identificador)){
+                correcto = true;
+            }
         }
 
-        return false;
+        return correcto;
+    }
+
+    /**
+     *
+     * @param NIE El NIE del que calcularemos su dígito de control
+     * @return True si es correcto el dígito de control, y false si no lo es
+     */
+    private static boolean validarNIE(String NIE) {
+        String X = "0";
+        String Y = "1";
+        String Z = "2";
+
+        if(NIE.toUpperCase().charAt(0) == X.charAt(0)){
+            NIE = X + NIE.substring(1,NIE.length()-1);
+            return validarLetraDNI(NIE);
+        } else if(NIE.toUpperCase().charAt(0) == Y.charAt(0)){
+            NIE = Y + NIE.substring(1,NIE.length()-1);
+            return validarLetraDNI(NIE);
+        } else {
+            NIE = Z + NIE.substring(1,NIE.length()-1);
+            return validarLetraDNI(NIE);
+        }
     }
 
     /**
@@ -102,16 +137,15 @@ public class UtileríaClienteServicio {
                     }
                 }
             }
-
-            return false;
         }
+        return false;
     }
 
     /**
      * @param cliente El cliente del que queremos saber si ya existe otro con ese mismo DNI y distintos nombres o apellidos
      * @return True si está repetido, y false si no lo está
      */
-    public static boolean dniRepetido(final ClienteEntity cliente) {
+    public static boolean identificadorRepetido(final ClienteEntity cliente) {
         if (camposValidos(cliente)) {
             ClienteDAO clienteDAO = new ClienteDAO();
             List<ClienteEntity> clientesBaseDatos = clienteDAO.getCliente(cliente.getDni());
@@ -122,7 +156,7 @@ public class UtileríaClienteServicio {
                 }
             }
 
-            return false;
         }
+        return false;
     }
 }

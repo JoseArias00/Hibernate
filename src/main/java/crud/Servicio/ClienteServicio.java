@@ -14,6 +14,11 @@ public class ClienteServicio implements IClienteServicio {
 
     private static final Logger LOGGER = LogManager.getLogger(ClienteDAO.class);
 
+    /**
+     * @param clientes Los clientes que queremos añadir a la base de datos
+     *                 <p>
+     *                 Método que comprueba los campos y sus valores antes de añadir los clientes a la base de datos.
+     */
     @Override
     public void insertClientes(final ClienteEntity... clientes) {
         ClienteDAO clienteDAO = new ClienteDAO();
@@ -23,14 +28,14 @@ public class ClienteServicio implements IClienteServicio {
                 if (validarIdentificador(contadorClientes.getDni())) {
                     if (!comprobarRepetecionCliente(contadorClientes)) {
                         LOGGER.info("Cliente no repetido");
-                        if (!dniRepetido(contadorClientes)) {
-                            LOGGER.debug("Cliente con DNI distinto");
+                        if (!identificadorRepetido(contadorClientes)) {
+                            LOGGER.debug("Cliente con identificador distinto");
                             clienteDAO.insertCliente(contadorClientes);
                         }
                     }
                 } else {
                     if (LOGGER.isInfoEnabled()) {
-                        LOGGER.info("El cliente con DNI : " + contadorClientes.getDni() + " no se ha introducido ya que su DNI no es correcto.");
+                        LOGGER.info("El cliente con identificador : " + contadorClientes.getDni() + " no se ha introducido ya que su DNI no es correcto.");
                     }
                 }
             }
@@ -41,10 +46,30 @@ public class ClienteServicio implements IClienteServicio {
         }
     }
 
+    /**
+     * @return Lista con todos los clientes registrados en el momento de la consulta en la base de datos
+     */
     @Override
     public List<ClienteEntity> getClientes() {
-        //TODO
-        return null;
+        ClienteDAO clienteDAO = new ClienteDAO();
+
+        return clienteDAO.getClientes();
+    }
+
+    /**
+     * @param identificador El identificador del cliente que queremos recuperar de la base de datos
+     * @return Una lista con todas las instancias del cliente solicitado
+     * @throws NullPointerException Ocurre cuando se pasa un identificador nulo por parámetro
+     */
+    @Override
+    public List<ClienteEntity> getCliente(final String identificador) throws NullPointerException {
+        if (identificador.equals(null)) {
+            throw new NullPointerException("El identificador pasado por parámetro es nulo.");
+        }
+
+        ClienteDAO clienteDAO = new ClienteDAO();
+
+        return clienteDAO.getCliente(identificador);
     }
 
     @Override

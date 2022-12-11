@@ -19,6 +19,7 @@ import java.util.List;
  * Clase ClienteDAO con los métodos de la interfaz IClienteDAO implementados.
  */
 public class ClienteDAO implements IClienteDAO, Serializable {
+
     /**
      * Variables finales usadas para establecer una conexión con la base de datos
      */
