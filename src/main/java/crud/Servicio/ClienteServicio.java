@@ -3,6 +3,7 @@ package crud.Servicio;
 import crud.DAO.ClienteDAO;
 import crud.IServicio.IClienteServicio;
 import crud.Modelo.ClienteEntity;
+import javafx.scene.layout.CornerRadii;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,13 +58,30 @@ public class ClienteServicio implements IClienteServicio {
     }
 
     /**
+     * @param orden El orden por el que se ordenará la lista de clientes
+     * @return La lista de clientes ordenadas como se pasa por parámetro
+     * @throws NullPointerException Ocurre cuando se pasa un orden nulo por parámetro
+     * @see OpcionesOrdenacion Las opciones válidas de orden
+     */
+    @Override
+    public List<ClienteEntity> getClientes(final OpcionesOrdenacion orden) throws NullPointerException {
+        if (orden == null) {
+            throw new NullPointerException("El orden pasado por parámetro es nulo.");
+        }
+
+        ClienteDAO clienteDAO = new ClienteDAO();
+
+        return clienteDAO.getClientes(orden);
+    }
+
+    /**
      * @param identificador El identificador del cliente que queremos recuperar de la base de datos
      * @return Una lista con todas las instancias del cliente solicitado
      * @throws NullPointerException Ocurre cuando se pasa un identificador nulo por parámetro
      */
     @Override
     public List<ClienteEntity> getCliente(final String identificador) throws NullPointerException {
-        if (identificador.equals(null)) {
+        if (identificador == null) {
             throw new NullPointerException("El identificador pasado por parámetro es nulo.");
         }
 
@@ -72,10 +90,33 @@ public class ClienteServicio implements IClienteServicio {
         return clienteDAO.getCliente(identificador);
     }
 
+    /**
+     * @param Id El identificador del cliente que queremos recuperar de la base de datos
+     * @return Una lista con todas las instancias del cliente solicitado
+     * @throws NullPointerException Ocurre cuando se pasa un identificador nulo por parámetro
+     */
     @Override
-    public void removeClientes(ClienteEntity... clientes) {
-        //TODO
+    public ClienteEntity getCliente(int Id) throws NullPointerException {
+        String numero = String.valueOf(Id);
+        if (numero == null) {
+            throw new NullPointerException("El Id pasado por parámetro es nulo.");
+        }
+
+        ClienteDAO clienteDAO = new ClienteDAO();
+
+        return clienteDAO.getCliente(Id);
     }
+
+    @Override
+    public void removeClientes(String DNI) {
+
+    }
+
+    @Override
+    public void removeClientes(int Id) {
+
+    }
+
 
     @Override
     public void setClientes(ClienteEntity... clientes) {

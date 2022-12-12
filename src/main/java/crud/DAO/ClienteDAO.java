@@ -111,6 +111,25 @@ public class ClienteDAO implements IClienteDAO, Serializable {
     }
 
     /**
+     * @param Id Id del cliente que queremos obtener de la base de datos
+     * @return La lista con la instancia del cliente seleccionada por su Id
+     */
+    @Override
+    public ClienteEntity getCliente(int Id) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id);
+        criteriaQuery.select(this.cliente).where(condicion);
+        List<ClienteEntity> cliente = entityManager.createQuery(criteriaQuery).getResultList();
+
+        entityManager.clear();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Se han recuperado todas las instancias de la base de datos del cliente con Id: " + Id);
+        }
+
+        return cliente.get(0);
+    }
+
+    /**
      * @param DNI DNI del cliente que queremos borrar de la base de datos
      *            <p>
      *            Método encargado de borrar todas las instancias del cliente con el DNI indicado de la base de datos.

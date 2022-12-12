@@ -14,6 +14,7 @@ public interface IClienteDAO {
     public List<ClienteEntity> getClientes();
     public List<ClienteEntity> getClientes(final OpcionesOrdenacion orden);
     public List<ClienteEntity> getCliente(final String DNI);
+    public ClienteEntity getCliente(final int ID);
 
     //Métodos para borrar clientes
     public void removeCliente(final String DNI);

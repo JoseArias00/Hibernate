@@ -1,12 +1,14 @@
 import crud.DAO.ClienteDAO;
 import crud.Modelo.ClienteEntity;
 import crud.Servicio.ClienteServicio;
+import crud.Servicio.OpcionesOrdenacion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static crud.Servicio.CondicionesClientes.REGISTRADO;
 import static crud.Servicio.CondicionesClientes.SOCIO;
@@ -40,7 +42,9 @@ public class Main {
         clienteEntity1.setTipo((byte) SOCIO.ordinal());*/
 
         ClienteServicio clienteServicio = new ClienteServicio();
-        clienteServicio.insertClientes(clienteEntity,clienteEntity1);
+        List<ClienteEntity> cliente = clienteServicio.getCliente(null);
+
+        //clienteServicio.insertClientes(clienteEntity,clienteEntity1);
 
         //clienteDAO.insertCliente(clienteEntity);
 
