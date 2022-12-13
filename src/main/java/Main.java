@@ -1,4 +1,5 @@
 import crud.DAO.ClienteDAO;
+import crud.Excepciones.ClienteTipoException;
 import crud.Modelo.ClienteEntity;
 import crud.Servicio.ClienteServicio;
 import crud.Servicio.OpcionesOrdenacion;
@@ -17,24 +18,25 @@ public class Main {
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClienteTipoException {
         LocalDateTime fecha = LocalDateTime.now();
         ClienteEntity clienteEntity = new ClienteEntity();
+        clienteEntity.setClienteId(40);
         clienteEntity.setDni("44437583L");
-        clienteEntity.setNombre("Michael");
-        clienteEntity.setApellidos("Jordan");
+        clienteEntity.setNombre("Kobe");
+        clienteEntity.setApellidos("Bryant");
         clienteEntity.setFechaAlta(Timestamp.valueOf(fecha));
-        clienteEntity.setTipo((byte) REGISTRADO.ordinal());
-        clienteEntity.setCuotaMaxima(BigDecimal.valueOf(Double.valueOf("4321.12")));
+        clienteEntity.setTipo((byte) SOCIO.ordinal());
+        clienteEntity.setCuotaMaxima(null);
 
         ClienteEntity clienteEntity1 = new ClienteEntity();
-        clienteEntity1.setDni("44437583L");
+        clienteEntity1.setDni("65473882N");
         clienteEntity1.setNombre("Michael");
         clienteEntity1.setApellidos("Jordan");
         clienteEntity1.setFechaAlta(Timestamp.valueOf(fecha));
         clienteEntity1.setTipo((byte) SOCIO.ordinal());
 
-       /* ClienteEntity clienteEntity1 = new ClienteEntity();
+        /*ClienteEntity clienteEntity1 = new ClienteEntity();
         clienteEntity1.setDni("44437593L");
         clienteEntity1.setNombre("Kobe");
         clienteEntity1.setApellidos("Bryant");
@@ -42,9 +44,10 @@ public class Main {
         clienteEntity1.setTipo((byte) SOCIO.ordinal());*/
 
         ClienteServicio clienteServicio = new ClienteServicio();
-        List<ClienteEntity> cliente = clienteServicio.getCliente(null);
+        //List<ClienteEntity> cliente = clienteServicio.removeClientes(37);
+        //clienteServicio.removeClientes("44437583L");
 
-        //clienteServicio.insertClientes(clienteEntity,clienteEntity1);
+        clienteServicio.setClientes(false,clienteEntity,clienteEntity1);
 
         //clienteDAO.insertCliente(clienteEntity);
 

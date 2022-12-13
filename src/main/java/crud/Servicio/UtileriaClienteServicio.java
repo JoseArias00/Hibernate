@@ -1,17 +1,24 @@
 package crud.Servicio;
 
 import crud.DAO.ClienteDAO;
+import crud.Excepciones.ClienteTipoException;
 import crud.Modelo.ClienteEntity;
 
 import java.util.List;
 import java.util.regex.*;
 
-public class UtileríaClienteServicio {
+/**
+ * @author Jose María
+ * <p>
+ * Utileria creada para la clase ClienteServicio
+ */
+public class UtileriaClienteServicio {
 
     /**
      * Constructor vacío para evitar la creación de objetos de la utilería
      */
-    private UtileríaClienteServicio(){};
+    private UtileriaClienteServicio() {
+    }
 
     /**
      * @param cliente Cliente pasado por parámetro para validar sus campos y comprobar que no de errores
@@ -33,10 +40,10 @@ public class UtileríaClienteServicio {
             if (cliente.getFechaAlta().equals(null)) {
                 throw new NullPointerException("La fecha de alta del cliente es nulo.");
             }
-            if (!((byte) cliente.getTipo() == 0 || (byte) cliente.getTipo() == 1)) {
+            if (!(cliente.getTipo() == 0 || cliente.getTipo() == 1)) {
                 throw new NullPointerException("El tipo de cliente es nulo.");
             }
-            if ((byte) cliente.getTipo() == 0 && cliente.getCuotaMaxima() == null) {
+            if (cliente.getTipo() == 0 && cliente.getCuotaMaxima() == null) {
                 throw new NullPointerException("La cuota máxima del cliente de tipo registrado es null");
             }
         }
@@ -61,11 +68,11 @@ public class UtileríaClienteServicio {
 
         //TODO comprobar NIE
         if (Pattern.matches(DNI, identificador)) {
-            if(validarLetraDNI(identificador)){
+            if (validarLetraDNI(identificador)) {
                 correcto = true;
             }
-        } else if(Pattern.matches(NIE,identificador)){
-            if(validarNIE(identificador)){
+        } else if (Pattern.matches(NIE, identificador)) {
+            if (validarNIE(identificador)) {
                 correcto = true;
             }
         }
@@ -74,7 +81,6 @@ public class UtileríaClienteServicio {
     }
 
     /**
-     *
      * @param NIE El NIE del que calcularemos su dígito de control
      * @return True si es correcto el dígito de control, y false si no lo es
      */
@@ -83,14 +89,14 @@ public class UtileríaClienteServicio {
         String Y = "1";
         String Z = "2";
 
-        if(NIE.toUpperCase().charAt(0) == X.charAt(0)){
-            NIE = X + NIE.substring(1,NIE.length()-1);
+        if (NIE.toUpperCase().charAt(0) == X.charAt(0)) {
+            NIE = X + NIE.substring(1, NIE.length() - 1);
             return validarLetraDNI(NIE);
-        } else if(NIE.toUpperCase().charAt(0) == Y.charAt(0)){
-            NIE = Y + NIE.substring(1,NIE.length()-1);
+        } else if (NIE.toUpperCase().charAt(0) == Y.charAt(0)) {
+            NIE = Y + NIE.substring(1, NIE.length() - 1);
             return validarLetraDNI(NIE);
         } else {
-            NIE = Z + NIE.substring(1,NIE.length()-1);
+            NIE = Z + NIE.substring(1, NIE.length() - 1);
             return validarLetraDNI(NIE);
         }
     }
@@ -144,8 +150,12 @@ public class UtileríaClienteServicio {
     /**
      * @param cliente El cliente del que queremos saber si ya existe otro con ese mismo DNI y distintos nombres o apellidos
      * @return True si está repetido, y false si no lo está
+     * @throws NullPointerException Ocurre cuando el cliente pasado por parámetro es nulo
      */
-    public static boolean identificadorRepetido(final ClienteEntity cliente) {
+    public static boolean identificadorRepetido(final ClienteEntity cliente) throws NullPointerException {
+        if (cliente.equals(null)) {
+            throw new NullPointerException("El cliente pasado por parámetro es nulo.");
+        }
         if (camposValidos(cliente)) {
             ClienteDAO clienteDAO = new ClienteDAO();
             List<ClienteEntity> clientesBaseDatos = clienteDAO.getCliente(cliente.getDni());
@@ -158,5 +168,23 @@ public class UtileríaClienteServicio {
 
         }
         return false;
+    }
+
+    /**
+     * @param cliente El cliente que queremos comprobar su cuota máxima en relacion con el tipo de cliente que es
+     * @return Si se corresponde el valor de la cuota con el tipo de cliente que es
+     * @throws ClienteTipoException Ocurre cuando se crea un cliente de tipo Socio con una couta maxima, o
+     *                              un cliente de tipo registrado sin cuota máxima
+     */
+    public static boolean comprobarTipo(final ClienteEntity cliente) throws ClienteTipoException {
+        if (cliente.getTipo() == 1 && cliente.getCuotaMaxima() != null) {
+            throw new ClienteTipoException("No se puede aplicar una cuota máxima a un cliente de tipo Socio");
+        }
+
+        if (cliente.getTipo() == 0 && cliente.getCuotaMaxima() == null) {
+            throw new ClienteTipoException("Los clientes de tipo Registrado deben tener una cuota máxima asignada.");
+        }
+
+        return true;
     }
 }

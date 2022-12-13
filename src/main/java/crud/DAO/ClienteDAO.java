@@ -153,6 +153,23 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         }
     }
 
+    @Override
+    public void removeCliente(final int Id) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id);
+        criteriaQuery.select(this.cliente).where(condicion);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
+
+        entityManager.getTransaction().begin();
+
+        entityManager.remove(clientes.get(0));
+
+        entityManager.getTransaction().commit();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("El cliente con Id: " + Id + ", ha sido borrado.");
+        }
+    }
+
     /**
      * Método encargado de borrar todos los clientes de la base de datos.
      */
