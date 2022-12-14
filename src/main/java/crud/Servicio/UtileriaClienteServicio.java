@@ -3,6 +3,8 @@ package crud.Servicio;
 import crud.DAO.ClienteDAO;
 import crud.Excepciones.ClienteTipoException;
 import crud.Modelo.ClienteEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.regex.*;
@@ -14,10 +16,53 @@ import java.util.regex.*;
  */
 public class UtileriaClienteServicio {
 
+    private static final Logger LOGGER = LogManager.getLogger(UtileriaClienteServicio.class);
+
     /**
      * Constructor vacío para evitar la creación de objetos de la utilería
      */
     private UtileriaClienteServicio() {
+    }
+
+    /**
+     * @param cliente Cliente que queremos validar de forma completa
+     * @return Si el cliente es correcto después de ser validado para insertarse en la base de datos
+     * @throws ClienteTipoException Ocurre cuando se crea un cliente de tipo Socio con una couta maxima, o
+     *                              un cliente de tipo registrado sin cuota máxima
+     */
+    public static boolean validarCliente(final ClienteEntity cliente) throws ClienteTipoException {
+        if (camposValidos(cliente)) {
+            if (validarIdentificador(cliente.getDni())) {
+                if (!comprobarRepetecionCliente(cliente)) {
+                    if (!identificadorRepetido(cliente)) {
+                        if (comprobarTipo(cliente)) {
+                            return true;
+                        } else {
+                            if (LOGGER.isWarnEnabled()) {
+                                LOGGER.warn("No se corresponde el tipo del cliente : " + cliente.getDni() + " con su cuota máxima asignada.");
+                            }
+                        }
+                    } else {
+                        if (LOGGER.isWarnEnabled()) {
+                            LOGGER.warn("Existe ya un cliente distinto con el identificador : " + cliente.getDni() + ".");
+                        }
+                    }
+                } else {
+                    if (LOGGER.isWarnEnabled()) {
+                        LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " tiene otra instancia con los mismos datos en la base de datos.");
+                    }
+                }
+            } else {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " no se ha introducido ya que su DNI no es correcto.");
+                }
+            }
+        } else {
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " tiene mínimo un campo inválido.");
+            }
+        }
+        return false;
     }
 
     /**
@@ -85,18 +130,20 @@ public class UtileriaClienteServicio {
      * @return True si es correcto el dígito de control, y false si no lo es
      */
     private static boolean validarNIE(String NIE) {
+        String x = "X";
+        String y = "Y";
         String X = "0";
         String Y = "1";
         String Z = "2";
 
-        if (NIE.toUpperCase().charAt(0) == X.charAt(0)) {
-            NIE = X + NIE.substring(1, NIE.length() - 1);
+        if (NIE.toUpperCase().charAt(0) == x.charAt(0)) {
+            NIE = X + NIE.substring(1, 9);
             return validarLetraDNI(NIE);
-        } else if (NIE.toUpperCase().charAt(0) == Y.charAt(0)) {
-            NIE = Y + NIE.substring(1, NIE.length() - 1);
+        } else if (NIE.toUpperCase().charAt(0) == y.charAt(0)) {
+            NIE = Y + NIE.substring(1, 9);
             return validarLetraDNI(NIE);
         } else {
-            NIE = Z + NIE.substring(1, NIE.length() - 1);
+            NIE = Z + NIE.substring(1, 9);
             return validarLetraDNI(NIE);
         }
     }

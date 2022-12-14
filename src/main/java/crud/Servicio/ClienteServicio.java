@@ -1,6 +1,7 @@
 package crud.Servicio;
 
 import static crud.Servicio.UtileriaClienteServicio.*;
+
 import crud.DAO.ClienteDAO;
 import crud.Excepciones.ClienteTipoException;
 import crud.IServicio.IClienteServicio;
@@ -28,22 +29,8 @@ public class ClienteServicio implements IClienteServicio {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         for (ClienteEntity contadorClientes : clientes) {
-            if (camposValidos(contadorClientes)) {
-                if (validarIdentificador(contadorClientes.getDni())) {
-                    if (!comprobarRepetecionCliente(contadorClientes)) {
-                        LOGGER.info("Cliente no repetido");
-                        if (!identificadorRepetido(contadorClientes)) {
-                            LOGGER.debug("Cliente con identificador distinto");
-                            if (comprobarTipo(contadorClientes)) {
-                                clienteDAO.insertCliente(contadorClientes);
-                            }
-                        }
-                    }
-                } else {
-                    if (LOGGER.isInfoEnabled()) {
-                        LOGGER.info("El cliente con identificador : " + contadorClientes.getDni() + " no se ha introducido ya que su DNI no es correcto.");
-                    }
-                }
+            if (validarCliente(contadorClientes)) {
+                clienteDAO.insertCliente(contadorClientes);
             }
         }
 
@@ -58,6 +45,11 @@ public class ClienteServicio implements IClienteServicio {
     @Override
     public List<ClienteEntity> getClientes() {
         ClienteDAO clienteDAO = new ClienteDAO();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Recuperados todos los clientes.");
+        }
+
 
         return clienteDAO.getClientes();
     }
@@ -76,6 +68,11 @@ public class ClienteServicio implements IClienteServicio {
 
         ClienteDAO clienteDAO = new ClienteDAO();
 
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Recuperados todos los clientes con el órden indicado.");
+        }
+
+
         return clienteDAO.getClientes(orden);
     }
 
@@ -91,6 +88,11 @@ public class ClienteServicio implements IClienteServicio {
         }
 
         ClienteDAO clienteDAO = new ClienteDAO();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Recuperados todos los clientes indicados.");
+        }
+
 
         return clienteDAO.getCliente(identificador);
     }
@@ -109,6 +111,11 @@ public class ClienteServicio implements IClienteServicio {
 
         ClienteDAO clienteDAO = new ClienteDAO();
 
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Recuperados todos los clientes indicados.");
+        }
+
+
         return clienteDAO.getCliente(Id);
     }
 
@@ -123,6 +130,11 @@ public class ClienteServicio implements IClienteServicio {
         }
 
         ClienteDAO clienteDAO = new ClienteDAO();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Borrados todos los clientes indicados.");
+        }
+
 
         clienteDAO.removeCliente(identificador);
     }
@@ -139,6 +151,10 @@ public class ClienteServicio implements IClienteServicio {
         }
 
         ClienteDAO clienteDAO = new ClienteDAO();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Borrados todos los clientes indicados.");
+        }
 
         clienteDAO.removeCliente(Id);
     }
@@ -158,21 +174,13 @@ public class ClienteServicio implements IClienteServicio {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         for (ClienteEntity contadorClientes : clientes) {
-            if (camposValidos(contadorClientes)) {
-                if (validarIdentificador(contadorClientes.getDni())) {
-                    LOGGER.info("Cliente no repetido");
-                    if (!identificadorRepetido(contadorClientes)) {
-                        LOGGER.debug("Cliente con identificador distinto");
-                        if (comprobarTipo(contadorClientes)) {
-                            clienteDAO.setCliente(contadorClientes, todasInstancias);
-                        }
-                    }
-                } else {
-                    if (LOGGER.isInfoEnabled()) {
-                        LOGGER.info("El cliente con identificador : " + contadorClientes.getDni() + " no se ha introducido ya que su DNI no es correcto.");
-                    }
-                }
+            if (validarCliente(contadorClientes)) {
+                clienteDAO.setCliente(contadorClientes, todasInstancias);
             }
+        }
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Modificados todos los clientes indicados.");
         }
     }
 

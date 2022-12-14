@@ -52,7 +52,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         entityManager.getTransaction().commit();
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Creado cliente con DNI: " + cliente.getDni() + ".");
+            LOGGER.info("Creado cliente con identificador: " + cliente.getDni() + ".");
         }
     }
 
@@ -92,19 +92,20 @@ public class ClienteDAO implements IClienteDAO, Serializable {
     }
 
     /**
-     * @param DNI DNI del cliente que queremos obtener de la base de datos
+     * @param identificador Identificador del cliente que queremos obtener de la base de datos
      * @return La lista con todas las distintas instancias del cliente indicado.
      */
     @Override
-    public List<ClienteEntity> getCliente(final String DNI) {
-        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), DNI);
+    public List<ClienteEntity> getCliente(final String identificador) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), identificador);
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
         entityManager.clear();
 
+
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Se han recuperado todas las instancias de la base de datos del cliente con DNI: " + DNI);
+            LOGGER.info("Se han recuperado todas las instancias de la base de datos del cliente con identificador: " + identificador);
         }
 
         return clientes;
@@ -130,13 +131,13 @@ public class ClienteDAO implements IClienteDAO, Serializable {
     }
 
     /**
-     * @param DNI DNI del cliente que queremos borrar de la base de datos
-     *            <p>
-     *            Método encargado de borrar todas las instancias del cliente con el DNI indicado de la base de datos.
+     * @param identificador Identificador del cliente que queremos borrar de la base de datos
+     *                      <p>
+     *                      Método encargado de borrar todas las instancias del cliente con el DNI indicado de la base de datos.
      */
     @Override
-    public void removeCliente(final String DNI) {
-        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), DNI);
+    public void removeCliente(final String identificador) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), identificador);
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -149,7 +150,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         entityManager.getTransaction().commit();
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("El cliente con DNI: " + DNI + ", ha sido borrado.");
+            LOGGER.info("El cliente con identificador: " + identificador + ", ha sido borrado.");
         }
     }
 
@@ -210,15 +211,19 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
-        for (int i = 0; i < clientes.size(); i++) {
-            cliente.setClienteId(clientes.get(i).getClienteId());
+        for (ClienteEntity clienteEntity : clientes) {
+            cliente.setClienteId(clienteEntity.getClienteId());
             entityManager.merge(cliente);
         }
 
         entityManager.getTransaction().commit();
 
+        String loggerInfo = (todasInstancias) ?
+                "El cliente con identificador: " + cliente.getDni() + ", ha sido modificado." :
+                "El cliente con Id: " + cliente.getClienteId() + ", ha sido modificado.";
+
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("El cliente con DNI: " + cliente.getDni() + ", ha sido modificado.");
+            LOGGER.info(loggerInfo);
         }
     }
 
