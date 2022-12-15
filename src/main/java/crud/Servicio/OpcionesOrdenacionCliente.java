@@ -1,5 +1,5 @@
 package crud.Servicio;
 
-public enum OpcionesOrdenacion {
+public enum OpcionesOrdenacionCliente {
     fechaAlta, dni
 }

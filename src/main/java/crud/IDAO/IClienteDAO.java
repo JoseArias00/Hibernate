@@ -1,27 +1,16 @@
 package crud.IDAO;
 
 import crud.Modelo.ClienteEntity;
-import crud.Servicio.OpcionesOrdenacion;
+import crud.Servicio.OpcionesOrdenacionCliente;
 
 import java.util.List;
 
-public interface IClienteDAO {
+public interface IClienteDAO extends IDAO<ClienteEntity, Integer> {
 
-    //Método para añadir clientes
-    public void insertCliente(ClienteEntity cliente);
+    //Método para listar clientes ordenandolos de una forma concreta
+    public List<ClienteEntity> getClientes(OpcionesOrdenacionCliente orden);
 
-    //Métodos para listar clientes
-    public List<ClienteEntity> getClientes();
-    public List<ClienteEntity> getClientes(OpcionesOrdenacion orden);
-    public List<ClienteEntity> getCliente(String DNI);
-    public ClienteEntity getCliente(int ID);
-
-    //Métodos para borrar clientes
-    public void removeCliente(String DNI);
-    public void removeCliente(int Id);
-    public void removeTodos();
-
-    //Método para recuperar un cliente y editarlo
-    public void setCliente(ClienteEntity cliente,boolean todasInstancias);
+    //Método para recuperar una o todas las instancias de un cliente y editarlo
+    public void editCliente(ClienteEntity cliente, boolean todasInstancias);
 
 }

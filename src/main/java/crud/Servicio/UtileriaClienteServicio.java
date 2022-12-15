@@ -1,5 +1,6 @@
 package crud.Servicio;
 
+import crud.Controlador.Controlador;
 import crud.DAO.ClienteDAO;
 import crud.Excepciones.ClienteTipoException;
 import crud.Modelo.ClienteEntity;
@@ -7,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.regex.*;
 
 /**
  * @author Jose María
@@ -32,7 +32,7 @@ public class UtileriaClienteServicio {
      */
     public static boolean validarCliente(final ClienteEntity cliente) throws ClienteTipoException {
         if (camposValidos(cliente)) {
-            if (validarIdentificador(cliente.getDni())) {
+            if (Controlador.validarIdentificador(cliente.getDni())) {
                 if (!comprobarRepetecionCliente(cliente)) {
                     if (!identificadorRepetido(cliente)) {
                         if (comprobarTipo(cliente)) {
@@ -96,76 +96,6 @@ public class UtileriaClienteServicio {
     }
 
     /**
-     * @param identificador El identificador a validar
-     * @return True si el identificador pasado por parámetro es válido y esta correctamente formado, y false en caso contrario
-     * @throws NullPointerException Ocurre cuando el identificador pasado por parámetros es null
-     */
-    public static boolean validarIdentificador(final String identificador) throws NullPointerException {
-        if (identificador.equals(null)) {
-            throw new NullPointerException("El identificador pasado por parámetro es nulo");
-        }
-
-        //TODO validar Cif
-        String DNI = "\\d{8}[a-zA-Z]$";
-        String NIE = "[x-zX-Z]\\d{7}[A-HJ-NP-TV-Za-hj-np-tv-z]$";
-        String CIF = "^[a-zA-Z^IiÑñOoTtXxYyZz]([:digit:]{0,7}([abcdefghijABCDEFGHIJ]|[:digit:]))$";
-        boolean correcto = false;
-
-        //TODO comprobar NIE
-        if (Pattern.matches(DNI, identificador)) {
-            if (validarLetraDNI(identificador)) {
-                correcto = true;
-            }
-        } else if (Pattern.matches(NIE, identificador)) {
-            if (validarNIE(identificador)) {
-                correcto = true;
-            }
-        }
-
-        return correcto;
-    }
-
-    /**
-     * @param NIE El NIE del que calcularemos su dígito de control
-     * @return True si es correcto el dígito de control, y false si no lo es
-     */
-    private static boolean validarNIE(String NIE) {
-        String x = "X";
-        String y = "Y";
-        String X = "0";
-        String Y = "1";
-        String Z = "2";
-
-        if (NIE.toUpperCase().charAt(0) == x.charAt(0)) {
-            NIE = X + NIE.substring(1, 9);
-            return validarLetraDNI(NIE);
-        } else if (NIE.toUpperCase().charAt(0) == y.charAt(0)) {
-            NIE = Y + NIE.substring(1, 9);
-            return validarLetraDNI(NIE);
-        } else {
-            NIE = Z + NIE.substring(1, 9);
-            return validarLetraDNI(NIE);
-        }
-    }
-
-    /**
-     * @param DNI El DNI que queremos validar
-     * @return Si el DNI es válido o no. True si lo es, y false si no
-     */
-    private static boolean validarLetraDNI(final String DNI) {
-        int numerosDNI = Integer.parseInt(DNI.substring(0, 8));
-        int resto;
-        char miLetra;
-        char[] asignacionLetra = {'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'};
-
-        resto = numerosDNI % 23;
-
-        miLetra = asignacionLetra[resto];
-
-        return miLetra == Character.toUpperCase(DNI.charAt(8));
-    }
-
-    /**
      * @param cliente El cliente que comprobaremos si ya existe otro igual dentro de la base de datos
      * @return True si está repetido, y false si no lo está
      */
@@ -173,7 +103,7 @@ public class UtileriaClienteServicio {
         //TODO Cuando se añada la fecha de alta descomentar la igualdad del if
         if (camposValidos(cliente)) {
             ClienteDAO clienteDAO = new ClienteDAO();
-            List<ClienteEntity> clientesBaseDatos = clienteDAO.getClientes();
+            List<ClienteEntity> clientesBaseDatos = clienteDAO.findAll();
 
             for (ClienteEntity contadorClientesBD : clientesBaseDatos) {
                 if (contadorClientesBD.getDni().equals(cliente.getDni()) &&
@@ -205,7 +135,7 @@ public class UtileriaClienteServicio {
         }
         if (camposValidos(cliente)) {
             ClienteDAO clienteDAO = new ClienteDAO();
-            List<ClienteEntity> clientesBaseDatos = clienteDAO.getCliente(cliente.getDni());
+            List<ClienteEntity> clientesBaseDatos = clienteDAO.find(cliente);
 
             for (ClienteEntity contadorClientes : clientesBaseDatos) {
                 if (!contadorClientes.getNombre().equals(cliente.getNombre()) || !contadorClientes.getApellidos().equals(cliente.getApellidos())) {

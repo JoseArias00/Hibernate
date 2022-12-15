@@ -1,16 +1,15 @@
-import crud.Controlador.ClienteControlador;
-import crud.Controlador.UtileríaControlador;
+import crud.Controlador.Controlador;
 import crud.Excepciones.ClienteTipoException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Scanner;
 
-import static crud.Controlador.ClienteControlador.*;
+import static crud.Vista.Consola.*;
 
 public class Main {
 
-    private static final Logger LOGGER = LogManager.getLogger(ClienteControlador.class);
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) throws ClienteTipoException {
         Scanner sc = new Scanner(System.in);
@@ -28,7 +27,7 @@ public class Main {
 
         String opcion = sc.nextLine();
 
-        if (UtileríaControlador.validarAccion(opcion)) {
+        if (Controlador.validarAccion(opcion)) {
             switch (opcion) {
                 case "1":
                     insertarClientes();

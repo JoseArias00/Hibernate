@@ -2,7 +2,7 @@ package crud.DAO;
 
 import crud.IDAO.IClienteDAO;
 import crud.Modelo.ClienteEntity;
-import crud.Servicio.OpcionesOrdenacion;
+import crud.Servicio.OpcionesOrdenacionCliente;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +45,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      *                Método encargado de insertar en la base de datos un cliente pasado por parámetro.
      */
     @Override
-    public void insertCliente(final ClienteEntity cliente) {
+    public void insert(final ClienteEntity cliente) {
         entityManager.getTransaction().begin();
         entityManager.persist(cliente);
 
@@ -60,7 +60,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return Una lista con todos los clientes de la base de datos.
      */
     @Override
-    public List<ClienteEntity> getClientes() {
+    public List<ClienteEntity> findAll() {
         criteriaQuery.select(cliente);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -78,7 +78,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return Una lista con todos los clientes de la base de datos ordenados.
      */
     @Override
-    public List<ClienteEntity> getClientes(final OpcionesOrdenacion orden) {
+    public List<ClienteEntity> getClientes(final OpcionesOrdenacionCliente orden) {
         criteriaQuery.select(cliente).orderBy(criteriaBuilder.asc(cliente.get(orden.toString())));
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -92,12 +92,12 @@ public class ClienteDAO implements IClienteDAO, Serializable {
     }
 
     /**
-     * @param identificador Identificador del cliente que queremos obtener de la base de datos
+     * @param cliente Cliente que buscaremos en la base de datos por su DNI
      * @return La lista con todas las distintas instancias del cliente indicado.
      */
     @Override
-    public List<ClienteEntity> getCliente(final String identificador) {
-        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), identificador);
+    public List<ClienteEntity> find(final ClienteEntity cliente) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), cliente.getDni());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -105,7 +105,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
 
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Se han recuperado todas las instancias de la base de datos del cliente con identificador: " + identificador);
+            LOGGER.info("Se han recuperado todas las instancias de la base de datos del cliente con identificador: " + cliente.getDni());
         }
 
         return clientes;
@@ -116,8 +116,8 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return La lista con la instancia del cliente seleccionada por su Id
      */
     @Override
-    public ClienteEntity getCliente(int Id) {
-        Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id);
+    public ClienteEntity findByPK(final Integer Id) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id.intValue());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> cliente = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -131,13 +131,13 @@ public class ClienteDAO implements IClienteDAO, Serializable {
     }
 
     /**
-     * @param identificador Identificador del cliente que queremos borrar de la base de datos
-     *                      <p>
-     *                      Método encargado de borrar todas las instancias del cliente con el DNI indicado de la base de datos.
+     * @param cliente Cliente que queremos borrar de la base de datos por su DNI
+     *                <p>
+     *                Método encargado de borrar todas las instancias del cliente con el DNI indicado de la base de datos.
      */
     @Override
-    public void removeCliente(final String identificador) {
-        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), identificador);
+    public void remove(final ClienteEntity cliente) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), cliente.getClienteId());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -150,13 +150,18 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         entityManager.getTransaction().commit();
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("El cliente con identificador: " + identificador + ", ha sido borrado.");
+            LOGGER.info("El cliente con identificador: " + cliente.getClienteId() + ", ha sido borrado.");
         }
     }
 
+    /**
+     * @param Id Id del cliente dentro de la base de datos
+     *           <p>
+     *           Método que borrar un cliente de la base de datos por su Id.
+     */
     @Override
-    public void removeCliente(final int Id) {
-        Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id);
+    public void removeByPK(final Integer Id) {
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id.intValue());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -167,15 +172,60 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         entityManager.getTransaction().commit();
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("El cliente con Id: " + Id + ", ha sido borrado.");
+            LOGGER.info("El cliente con Id: " + Id.intValue() + ", ha sido borrado.");
         }
+    }
+
+    /**
+     * @param cliente Cliente a editar en la base de datos.
+     *                <p>
+     *                Método encargado de editar un cliente buscandolo mediante su Id.
+     */
+    @Override
+    public void edit(final ClienteEntity cliente) {
+        String clienteId = "clienteId";
+        Predicate condicion = criteriaBuilder.equal(this.cliente.get(clienteId), cliente.getClienteId());
+
+        entityManager.getTransaction().begin();
+        criteriaQuery.select(this.cliente).where(condicion);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
+
+        for (ClienteEntity clienteEntity : clientes) {
+            cliente.setClienteId(clienteEntity.getClienteId());
+            entityManager.merge(cliente);
+        }
+
+        entityManager.getTransaction().commit();
+
+        String loggerInfo = "El cliente con Id: " + cliente.getClienteId() + ", ha sido modificado.";
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(loggerInfo);
+        }
+    }
+
+    /**
+     * @return El número total de clientes que tenemos en la base de datos
+     */
+    @Override
+    public int count() {
+        criteriaQuery.select(cliente);
+        List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
+
+        entityManager.clear();
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Completada la solicitud del listado de todos los clientes para conocer el total de clientes en la base de datos.");
+        }
+
+        return clientes.size();
     }
 
     /**
      * Método encargado de borrar todos los clientes de la base de datos.
      */
     @Override
-    public void removeTodos() {
+    public void removeAll() {
         criteriaQuery.select(this.cliente);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -200,7 +250,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      *                        Se puede modificar solo una instancia indicando por parámetro false, o todas, indicando por parámetro true.
      */
     @Override
-    public void setCliente(final ClienteEntity cliente, final boolean todasInstancias) {
+    public void editCliente(final ClienteEntity cliente, final boolean todasInstancias) {
         String dni = "dni";
         String clienteId = "clienteId";
         Predicate condicion = (todasInstancias) ?
