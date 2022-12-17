@@ -1,6 +1,5 @@
 package crud.Servicio;
 
-import crud.Controlador.Controlador;
 import crud.DAO.ClienteDAO;
 import crud.Excepciones.ClienteTipoException;
 import crud.Modelo.ClienteEntity;
@@ -32,31 +31,26 @@ public class UtileriaClienteServicio {
      */
     public static boolean validarCliente(final ClienteEntity cliente) throws ClienteTipoException {
         if (camposValidos(cliente)) {
-            if (Controlador.validarIdentificador(cliente.getDni())) {
-                if (!comprobarRepetecionCliente(cliente)) {
-                    if (!identificadorRepetido(cliente)) {
-                        if (comprobarTipo(cliente)) {
-                            return true;
-                        } else {
-                            if (LOGGER.isWarnEnabled()) {
-                                LOGGER.warn("No se corresponde el tipo del cliente : " + cliente.getDni() + " con su cuota máxima asignada.");
-                            }
-                        }
+            if (!comprobarRepetecionCliente(cliente)) {
+                if (!identificadorRepetido(cliente)) {
+                    if (comprobarTipo(cliente)) {
+                        return true;
                     } else {
                         if (LOGGER.isWarnEnabled()) {
-                            LOGGER.warn("Existe ya un cliente distinto con el identificador : " + cliente.getDni() + ".");
+                            LOGGER.warn("No se corresponde el tipo del cliente : " + cliente.getDni() + " con su cuota máxima asignada.");
                         }
                     }
                 } else {
                     if (LOGGER.isWarnEnabled()) {
-                        LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " tiene otra instancia con los mismos datos en la base de datos.");
+                        LOGGER.warn("Existe ya un cliente distinto con el identificador : " + cliente.getDni() + ".");
                     }
                 }
             } else {
                 if (LOGGER.isWarnEnabled()) {
-                    LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " no se ha introducido ya que su DNI no es correcto.");
+                    LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " tiene otra instancia con los mismos datos en la base de datos.");
                 }
             }
+
         } else {
             if (LOGGER.isWarnEnabled()) {
                 LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " tiene mínimo un campo inválido.");
@@ -100,16 +94,15 @@ public class UtileriaClienteServicio {
      * @return True si está repetido, y false si no lo está
      */
     public static boolean comprobarRepetecionCliente(final ClienteEntity cliente) {
-        //TODO Cuando se añada la fecha de alta descomentar la igualdad del if
         if (camposValidos(cliente)) {
             ClienteDAO clienteDAO = new ClienteDAO();
             List<ClienteEntity> clientesBaseDatos = clienteDAO.findAll();
 
             for (ClienteEntity contadorClientesBD : clientesBaseDatos) {
-                if (contadorClientesBD.getDni().equals(cliente.getDni()) &&
-                        contadorClientesBD.getNombre().equals(cliente.getNombre()) &&
-                        contadorClientesBD.getApellidos().equals(cliente.getApellidos()) &&
-                        //contadorClientesBD.getFechaAlta().equals(cliente.getFechaAlta()) &&
+                if (contadorClientesBD.getDni().equalsIgnoreCase(cliente.getDni()) &&
+                        contadorClientesBD.getNombre().equalsIgnoreCase(cliente.getNombre()) &&
+                        contadorClientesBD.getApellidos().equalsIgnoreCase(cliente.getApellidos()) &&
+                        contadorClientesBD.getFechaAlta().equals(cliente.getFechaAlta()) &&
                         contadorClientesBD.getTipo() == cliente.getTipo()) {
                     if (cliente.getTipo() == 0 && contadorClientesBD.getTipo() == 0) {
                         if (contadorClientesBD.getCuotaMaxima().equals(cliente.getCuotaMaxima())) {
@@ -164,4 +157,6 @@ public class UtileriaClienteServicio {
 
         return true;
     }
+
+
 }

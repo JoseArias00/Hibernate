@@ -2,7 +2,7 @@ package crud.IServicio;
 
 import crud.Excepciones.ClienteTipoException;
 import crud.Modelo.ClienteEntity;
-import crud.Servicio.OpcionesOrdenacionCliente;
+import crud.Otros.OpcionesOrdenacionCliente;
 
 import java.util.List;
 
@@ -10,9 +10,6 @@ public interface IClienteServicio extends IServicio<ClienteEntity, Integer>{
 
     //Método para recuperar todos los clientes ordenados por su fecha de alta o su DNI
     public List<ClienteEntity> getClientes(OpcionesOrdenacionCliente orden);
-
-    //Método para modificar cliente
-    public void setClientes(boolean todasInstancias, ClienteEntity ... clientes) throws ClienteTipoException;
 
 //    //Método para añadir clientes
 //    public void insertClientes(ClienteEntity ... clientes) throws IllegalAccessException, ClienteTipoException;

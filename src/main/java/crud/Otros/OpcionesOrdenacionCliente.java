@@ -1,4 +1,4 @@
-package crud.Servicio;
+package crud.Otros;
 
 public enum OpcionesOrdenacionCliente {
     fechaAlta, dni

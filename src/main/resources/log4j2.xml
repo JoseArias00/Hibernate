@@ -14,7 +14,7 @@
     <Loggers>
         <Logger name="org.hibernate" level="error"/>
         <Root level="INFO">
-            <AppenderRef ref="ConsoleAppender"/>
+            <!--<AppenderRef ref="ConsoleAppender"/>-->
             <AppenderRef ref="RollingFile"/>
         </Root>
     </Loggers>

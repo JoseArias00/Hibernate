@@ -1,7 +1,7 @@
 package crud.IDAO;
 
 import crud.Modelo.ClienteEntity;
-import crud.Servicio.OpcionesOrdenacionCliente;
+import crud.Otros.OpcionesOrdenacionCliente;
 
 import java.util.List;
 
