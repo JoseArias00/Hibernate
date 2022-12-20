@@ -3,7 +3,7 @@ package crud.Servicio;
 import static crud.Servicio.UtileriaClienteServicio.*;
 
 import crud.DAO.ClienteDAO;
-import crud.Excepciones.ClienteTipoException;
+import crud.Excepciones.ClienteException;
 import crud.IServicio.IClienteServicio;
 import crud.Modelo.ClienteEntity;
 
@@ -22,20 +22,26 @@ public class ClienteServicio implements IClienteServicio {
     private static final Logger LOGGER = LogManager.getLogger(ClienteDAO.class);
 
     /**
-     * @param cliente Los clientes que queremos añadir a la base de datos
-     *                <p>
-     *                Método que comprueba los campos y sus valores antes de añadir los clientes a la base de datos.
+     * @param cliente Cliente que deseamos insertar en la base de datos
+     * @throws ClienteException Ocurre cuando el cliente no pasa las validaciones pertinentes
+     * @see UtileriaClienteServicio El método validar cliente
      */
     @Override
-    public void insert(final ClienteEntity cliente) throws ClienteTipoException {
+    public void insert(final ClienteEntity cliente) throws ClienteException {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         if (validarCliente(cliente)) {
             clienteDAO.insert(cliente);
-        }
 
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Añadidos todos los clientes correctos a la base de datos.");
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Añadido el cliente a la base de datos.");
+            }
+        } else {
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("El cliente no se puede insertar por errores en su validación.");
+            }
+
+            throw new ClienteException("El cliente que desea insertar en la base de datos no es válido");
         }
     }
 
@@ -134,7 +140,6 @@ public class ClienteServicio implements IClienteServicio {
 
         clienteDAO.remove(cliente);
 
-
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Borrados todos los clientes indicados.");
         }
@@ -161,9 +166,10 @@ public class ClienteServicio implements IClienteServicio {
 
     /**
      * @param cliente Los clientes que queremos modificar de la base de datos
+     * @throws ClienteException Ocurre cuando el cliente no pasa las validaciones pertinentes
      */
     @Override
-    public void edit(final ClienteEntity cliente) throws ClienteTipoException {
+    public void edit(final ClienteEntity cliente) throws ClienteException {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         if (validarCliente(cliente)) {

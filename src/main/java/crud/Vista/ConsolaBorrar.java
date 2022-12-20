@@ -2,7 +2,6 @@ package crud.Vista;
 
 import crud.Controlador.Controlador;
 import crud.Modelo.ClienteEntity;
-import crud.Servicio.ClienteServicio;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +31,9 @@ public class ConsolaBorrar {
 
         mostrar(clientes);
 
-        System.out.println("Desea borrar"
+        System.out.println("Desea borrar:"
                 + "\n1.Una instancia"
-                + "\n2.Varias instancias"
-                + "\n3.Todas las instancias");
+                + "\n2.Todas las instancias");
 
         String opcion = sc.nextLine();
 
@@ -50,48 +48,34 @@ public class ConsolaBorrar {
                 borrarUnaInstancia(mapClientes);
                 break;
             case "2":
-                borrarVariasInstancias(mapClientes);
-                break;
-            case "3":
                 borrarTodas(clientes);
             default:
         }
 
     }
 
-    private static void borrarUnaInstancia(HashMap<Integer, ClienteEntity> clientes) {
-        //TODO comprobar entrada diferente rango
+    private static void borrarUnaInstancia(final HashMap<Integer, ClienteEntity> clientes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Introduzca el número de la instancia que desea borrar: ");
         int numero = sc.nextInt();
 
-        while (numero > 0 && numero < clientes.size()) {
+        while (numero < 0 || numero > clientes.size()) {
             System.err.println("Introduzca una opción válida.");
 
             numero = sc.nextInt();
         }
 
         Controlador.borrarCliente(clientes.get(numero));
+
+        System.out.println("Cliente con DNI: " + clientes.get(numero).getDni() + " ha sido borrado con éxito.");
     }
 
-    private static void borrarVariasInstancias(HashMap<Integer, ClienteEntity> clientes) {
-        //TODO
-        Scanner sc = new Scanner(System.in);
-        ClienteServicio clienteServicio = new ClienteServicio();
-        System.out.println("Introduzca los números de las instancia que desea borrar separados por comas: ");
-        int numero = sc.nextInt();
-
-        while (numero > 0 && numero < clientes.size()) {
-            System.err.println("Introduzca una opción válida.");
-
-            numero = sc.nextInt();
+    private static void borrarTodas(final List<ClienteEntity> clientes) {
+        for (ClienteEntity cliente : clientes) {
+            Controlador.borrarCliente(cliente);
         }
 
-        clienteServicio.removeByPK(clientes.get(numero).getClienteId());
-    }
-
-    private static void borrarTodas(List<ClienteEntity> clientes) {
-
+        System.out.println("Han sido borradas con éxitos todas las instancias del cliente con DNI: " + clientes.get(0).getDni());
     }
 
     private static void mostrar(final List<ClienteEntity> clientes) {
@@ -100,7 +84,7 @@ public class ConsolaBorrar {
 
             String tipo = (clientes.get(i).getTipo() == 0) ? "REGISTRADO" : "SOCIO";
             salida.append("-------------------------"
-                    + "\nInstancia número " + (i+1)
+                    + "\nInstancia número " + (i + 1)
                     + "\nNombre: " + clientes.get(i).getNombre()
                     + "\nApellidos: " + clientes.get(i).getApellidos()
                     + "\nFecha de alta: " + clientes.get(i).getFechaAlta()

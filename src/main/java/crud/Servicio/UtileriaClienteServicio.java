@@ -1,7 +1,7 @@
 package crud.Servicio;
 
 import crud.DAO.ClienteDAO;
-import crud.Excepciones.ClienteTipoException;
+import crud.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,10 +26,9 @@ public class UtileriaClienteServicio {
     /**
      * @param cliente Cliente que queremos validar de forma completa
      * @return Si el cliente es correcto después de ser validado para insertarse en la base de datos
-     * @throws ClienteTipoException Ocurre cuando se crea un cliente de tipo Socio con una couta maxima, o
-     *                              un cliente de tipo registrado sin cuota máxima
+     * @throws ClienteException Ocurre cuando al crear un cliente no pasa las validaciones relacionadas con la base de datos
      */
-    public static boolean validarCliente(final ClienteEntity cliente) throws ClienteTipoException {
+    public static boolean validarCliente(final ClienteEntity cliente) throws ClienteException {
         if (camposValidos(cliente)) {
             if (!comprobarRepetecionCliente(cliente)) {
                 if (!identificadorRepetido(cliente)) {
@@ -143,16 +142,16 @@ public class UtileriaClienteServicio {
     /**
      * @param cliente El cliente que queremos comprobar su cuota máxima en relacion con el tipo de cliente que es
      * @return Si se corresponde el valor de la cuota con el tipo de cliente que es
-     * @throws ClienteTipoException Ocurre cuando se crea un cliente de tipo Socio con una couta maxima, o
+     * @throws ClienteException Ocurre cuando se crea un cliente de tipo Socio con una couta maxima, o
      *                              un cliente de tipo registrado sin cuota máxima
      */
-    public static boolean comprobarTipo(final ClienteEntity cliente) throws ClienteTipoException {
+    public static boolean comprobarTipo(final ClienteEntity cliente) throws ClienteException {
         if (cliente.getTipo() == 1 && cliente.getCuotaMaxima() != null) {
-            throw new ClienteTipoException("No se puede aplicar una cuota máxima a un cliente de tipo Socio");
+            throw new ClienteException("No se puede aplicar una cuota máxima a un cliente de tipo Socio");
         }
 
         if (cliente.getTipo() == 0 && cliente.getCuotaMaxima() == null) {
-            throw new ClienteTipoException("Los clientes de tipo Registrado deben tener una cuota máxima asignada.");
+            throw new ClienteException("Los clientes de tipo Registrado deben tener una cuota máxima asignada.");
         }
 
         return true;

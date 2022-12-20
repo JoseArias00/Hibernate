@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 public class UtileriaValidaciones {
     private static final Logger LOGGER = LogManager.getLogger(Controlador.class);
 
-
     public static boolean validarAccion(final String opcion) {
         if (opcion != null) {
             String opciones = "[1-6]{1}$";
@@ -26,7 +25,16 @@ public class UtileriaValidaciones {
 
     public static boolean validarAccionBorrar(final String opcion) {
         if (opcion != null) {
-            String opciones = "[1-3]{1}$";
+            String opciones = "[1-2]{1}$";
+
+            return Pattern.matches(opciones, opcion);
+        }
+        return false;
+    }
+
+    public static boolean validarSiNo(final String opcion) {
+        if (opcion != null) {
+            String opciones = "(Si|No)$";
 
             return Pattern.matches(opciones, opcion);
         }

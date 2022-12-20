@@ -1,4 +1,3 @@
-import crud.Excepciones.ClienteTipoException;
 import crud.Vista.ConsolaPrincipal;
 
 public class Main {

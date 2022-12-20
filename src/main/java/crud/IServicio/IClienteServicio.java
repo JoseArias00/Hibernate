@@ -1,6 +1,5 @@
 package crud.IServicio;
 
-import crud.Excepciones.ClienteTipoException;
 import crud.Modelo.ClienteEntity;
 import crud.Otros.OpcionesOrdenacionCliente;
 

@@ -1,5 +1,6 @@
 package crud.Controlador;
 
+import crud.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
 import crud.Servicio.ClienteServicio;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,15 @@ import java.util.List;
 public class Controlador {
 
     private static final Logger LOGGER = LogManager.getLogger(Controlador.class);
+
+    public static void insertarCliente(final ClienteEntity cliente) throws ClienteException, NullPointerException {
+        if(cliente == null){
+            throw new NullPointerException("El cliente pasado por parámetros es nulo");
+        }
+
+        ClienteServicio clienteServicio = new ClienteServicio();
+        clienteServicio.insert(cliente);
+    }
 
     public static List<ClienteEntity> consultarTodos(){
         ClienteServicio clienteServicio = new ClienteServicio();

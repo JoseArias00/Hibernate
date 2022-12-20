@@ -1,12 +1,12 @@
 package crud.IServicio;
 
-import crud.Excepciones.ClienteTipoException;
+import crud.Excepciones.ClienteException;
 
 import java.util.List;
 
 public interface IServicio<T,PK> {
 
-    public void insert(T entity) throws ClienteTipoException;
+    public void insert(T entity) throws ClienteTipoException, ClienteException;
 
     public List<T> getAll();
 
@@ -18,5 +18,5 @@ public interface IServicio<T,PK> {
 
     public void removeByPK(PK entityPK);
 
-    public void edit(T entity) throws ClienteTipoException;
+    public void edit(T entity) throws ClienteTipoException, ClienteException;
 }

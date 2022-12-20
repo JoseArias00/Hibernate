@@ -1,8 +1,8 @@
 package crud.Vista;
 
-import crud.Excepciones.ClienteTipoException;
+import crud.Controlador.Controlador;
+import crud.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
-import crud.Servicio.ClienteServicio;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
@@ -11,9 +11,8 @@ import static crud.Vista.UtileriaValidaciones.*;
 
 public class ConsolaInsertar {
 
-    public static void insertarClientes() throws ClienteTipoException {
+    public static void insertarClientes() throws ClienteException {
         ClienteEntity clienteEntity = new ClienteEntity();
-        ClienteServicio clienteServicio = new ClienteServicio();
         Scanner sc = new Scanner(System.in);
 
         //Asignamos el identificador del cliente
@@ -100,7 +99,11 @@ public class ConsolaInsertar {
             clienteEntity.setCuotaMaxima(cuotaMax);
         }
 
-        clienteServicio.insert(clienteEntity);
+        try{
+            Controlador.insertarCliente(clienteEntity);
+        } catch (ClienteException exception){
+            System.err.println("El cliente no se ha podido añadir por errores de validaciones.");
+        }
     }
 
 }
