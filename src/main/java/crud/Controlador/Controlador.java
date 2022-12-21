@@ -22,14 +22,14 @@ public class Controlador {
         clienteServicio.insert(cliente);
     }
 
-    public static List<ClienteEntity> listarTodos(){
+    public static List<ClienteEntity> devolverTodos(){
         ClienteServicio clienteServicio = new ClienteServicio();
         List<ClienteEntity> listaClientes = clienteServicio.getAll();
 
         return listaClientes;
     }
 
-    public static List<ClienteEntity> listarTodosOrdenados(final OpcionesOrdenacionCliente orden){
+    public static List<ClienteEntity> devolverTodosOrdenados(final OpcionesOrdenacionCliente orden){
         if(orden == null){
             return null;
         }

@@ -52,6 +52,15 @@ public class UtileriaValidaciones {
         return false;
     }
 
+    public static boolean validarCampos(final String opcion){
+        if (opcion != null) {
+            String opciones = "(1-5)$";
+
+            return Pattern.matches(opciones, opcion);
+        }
+        return false;
+    }
+
     public static Timestamp devolverFechaAlta(final String fechaAlta) {
         if (fechaAlta != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HHmmss");

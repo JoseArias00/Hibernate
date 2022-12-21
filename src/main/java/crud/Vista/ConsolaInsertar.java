@@ -11,7 +11,7 @@ import static crud.Vista.UtileriaValidaciones.*;
 
 public class ConsolaInsertar {
 
-    public static void insertarClientes() throws ClienteException {
+    public static void insertarClientes() {
         ClienteEntity clienteEntity = new ClienteEntity();
         Scanner sc = new Scanner(System.in);
 

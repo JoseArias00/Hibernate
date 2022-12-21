@@ -32,7 +32,7 @@ public class ConsolaListar {
     }
 
     private static void listarDesordenado() {
-        List<ClienteEntity> clientes = Controlador.listarTodos();
+        List<ClienteEntity> clientes = Controlador.devolverTodos();
 
         mostrar(clientes);
     }
@@ -53,9 +53,9 @@ public class ConsolaListar {
         }
 
         if(orden.equals(fechaAlta)){
-            clientes = Controlador.listarTodosOrdenados(OpcionesOrdenacionCliente.fechaAlta);
+            clientes = Controlador.devolverTodosOrdenados(OpcionesOrdenacionCliente.fechaAlta);
         } else {
-            clientes = Controlador.listarTodosOrdenados(OpcionesOrdenacionCliente.dni);
+            clientes = Controlador.devolverTodosOrdenados(OpcionesOrdenacionCliente.dni);
         }
 
         mostrar(clientes);
