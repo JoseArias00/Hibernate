@@ -1,6 +1,7 @@
 package crud.Vista;
 
 import crud.Controlador.Controlador;
+import crud.Modelo.ClienteEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class UtileriaValidaciones {
@@ -17,6 +19,15 @@ public class UtileriaValidaciones {
     public static boolean validarAccion(final String opcion) {
         if (opcion != null) {
             String opciones = "[1-6]{1}$";
+
+            return Pattern.matches(opciones, opcion);
+        }
+        return false;
+    }
+
+    public static boolean validarOrden(final String opcion){
+        if(opcion != null){
+            String opciones = "(Fecha de alta|DNI)$";
 
             return Pattern.matches(opciones, opcion);
         }
@@ -192,4 +203,5 @@ public class UtileriaValidaciones {
 
         return miLetra == Character.toUpperCase(DNI.charAt(8));
     }
+
 }

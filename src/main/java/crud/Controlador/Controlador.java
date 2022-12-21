@@ -2,6 +2,7 @@ package crud.Controlador;
 
 import crud.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
+import crud.Otros.OpcionesOrdenacionCliente;
 import crud.Servicio.ClienteServicio;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,11 +22,21 @@ public class Controlador {
         clienteServicio.insert(cliente);
     }
 
-    public static List<ClienteEntity> consultarTodos(){
+    public static List<ClienteEntity> listarTodos(){
         ClienteServicio clienteServicio = new ClienteServicio();
         List<ClienteEntity> listaClientes = clienteServicio.getAll();
 
         return listaClientes;
+    }
+
+    public static List<ClienteEntity> listarTodosOrdenados(final OpcionesOrdenacionCliente orden){
+        if(orden == null){
+            return null;
+        }
+
+        ClienteServicio clienteServicio = new ClienteServicio();
+
+        return clienteServicio.getClientes(orden);
     }
 
     public static List<ClienteEntity> consultarPorDNI(final String DNI){

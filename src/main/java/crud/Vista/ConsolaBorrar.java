@@ -10,7 +10,7 @@ import java.util.Scanner;
 import static crud.Controlador.Controlador.consultarPorDNI;
 import static crud.Vista.UtileriaValidaciones.*;
 
-public class ConsolaBorrar {
+public class ConsolaBorrar{
 
     public static void borrarClientes() {
         Scanner sc = new Scanner(System.in);
@@ -78,7 +78,7 @@ public class ConsolaBorrar {
         System.out.println("Han sido borradas con éxitos todas las instancias del cliente con DNI: " + clientes.get(0).getDni());
     }
 
-    private static void mostrar(final List<ClienteEntity> clientes) {
+    public static void mostrar(final List<ClienteEntity> clientes){
         for (int i = 0; i < clientes.size(); i++) {
             StringBuilder salida = new StringBuilder();
 
@@ -94,7 +94,7 @@ public class ConsolaBorrar {
                 salida.append("\nCuota máxima: " + clientes.get(i).getCuotaMaxima());
             }
 
-            System.out.println("\u001B[30m" + salida + "\u001B[0m");
+            System.out.println("\u001B[34m" + salida + "\u001B[0m");
         }
     }
 }

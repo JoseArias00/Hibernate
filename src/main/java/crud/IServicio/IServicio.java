@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IServicio<T,PK> {
 
-    public void insert(T entity) throws ClienteTipoException, ClienteException;
+    public void insert(T entity) throws ClienteException;
 
     public List<T> getAll();
 
@@ -18,5 +18,5 @@ public interface IServicio<T,PK> {
 
     public void removeByPK(PK entityPK);
 
-    public void edit(T entity) throws ClienteTipoException, ClienteException;
+    public void edit(T entity) throws  ClienteException;
 }
