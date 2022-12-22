@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * @author Jose Maria
+ */
 @Entity
 @Table(name = "clientes", schema = "agendaproconsi")
 public class ClienteEntity implements Serializable {
@@ -88,9 +91,7 @@ public class ClienteEntity implements Serializable {
         this.cuotaMaxima = cuotaMaxima;
     }
 
-    public ClienteEntity() {
-
-    }
+    public ClienteEntity() {}
 
     @Override
     public boolean equals(Object o) {

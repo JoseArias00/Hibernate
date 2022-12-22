@@ -2,23 +2,30 @@ package crud.IDAO;
 
 import java.util.List;
 
-public interface IDAO<T,PK> {
+/**
+ * @param <T>  Genérico referido a las entidades
+ * @param <PK> Genérico referido a las 'primary keys'
+ * @author Jose Maria
+ * <p>
+ * Interfaz IDAO
+ */
+public interface IDAO<T, PK> {
 
-    public void insert(T entity);
+    public void insertar(T entity);
 
-    public List<T> find(T entity);
+    public List<T> buscar(T entity);
 
-    public T findByPK(PK entityPk);
+    public T buscarPorPK(PK entityPk);
 
-    public List<T> findAll();
+    public List<T> buscarTodos();
 
-    public void removeAll();
+    public void borrarTodos();
 
-    public void remove(T entity);
+    public void borrar(T entity);
 
-    public void removeByPK(PK entityPK);
+    public void borrarPorPK(PK entityPK);
 
-    public void edit(T entity);
+    public void editar(T entity);
 
-    public int count();
+    public int contar();
 }

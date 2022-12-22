@@ -10,8 +10,14 @@ import java.util.Scanner;
 import static crud.Vista.UtileriaValidaciones.validarOrden;
 import static crud.Vista.UtileriaValidaciones.validarSiNo;
 
+/**
+ * @author Jose Maria
+ */
 public class ConsolaListar {
 
+    /**
+     * Método encargado de mostrar por pantalla el proceso para listar los clientes de la base de datos actuales
+     */
     public static void listarClientes() {
         String Si = "Si";
         Scanner sc = new Scanner(System.in);
@@ -31,12 +37,20 @@ public class ConsolaListar {
         }
     }
 
+    /**
+     * Método encargado de recuperar y mostrar los clientes de forma desordenada
+     */
     private static void listarDesordenado() {
+        System.out.println("Cargando...");
+
         List<ClienteEntity> clientes = Controlador.devolverTodos();
 
         mostrar(clientes);
     }
 
+    /**
+     * Método encargado de recuperar y mostrar los clientes de forma ordenada
+     */
     private static void listarOrdenado() {
         String fechaAlta = "Fecha de alta";
         Scanner sc = new Scanner(System.in);
@@ -52,7 +66,9 @@ public class ConsolaListar {
             orden = sc.nextLine();
         }
 
-        if(orden.equals(fechaAlta)){
+        System.out.println("Cargando...");
+
+        if (orden.equals(fechaAlta)) {
             clientes = Controlador.devolverTodosOrdenados(OpcionesOrdenacionCliente.fechaAlta);
         } else {
             clientes = Controlador.devolverTodosOrdenados(OpcionesOrdenacionCliente.dni);
@@ -61,7 +77,12 @@ public class ConsolaListar {
         mostrar(clientes);
     }
 
-    public static void mostrar(final List<ClienteEntity> clientes){
+    /**
+     * @param clientes Lista con todos los clientes recuperados de la base de datos
+     *                 <p>
+     *                 Método encargado de mostrar por pantalla todos los clientes pasados por parámetro
+     */
+    private static void mostrar(final List<ClienteEntity> clientes) {
         for (int i = 0; i < clientes.size(); i++) {
             StringBuilder salida = new StringBuilder();
 

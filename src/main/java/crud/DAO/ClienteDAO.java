@@ -45,7 +45,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      *                Método encargado de insertar en la base de datos un cliente pasado por parámetro.
      */
     @Override
-    public void insert(final ClienteEntity cliente) {
+    public void insertar(final ClienteEntity cliente) {
         entityManager.getTransaction().begin();
         entityManager.persist(cliente);
 
@@ -60,7 +60,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return Una lista con todos los clientes de la base de datos.
      */
     @Override
-    public List<ClienteEntity> findAll() {
+    public List<ClienteEntity> buscarTodos() {
         criteriaQuery.select(cliente);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -78,7 +78,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return Una lista con todos los clientes de la base de datos ordenados.
      */
     @Override
-    public List<ClienteEntity> getClientes(final OpcionesOrdenacionCliente orden) {
+    public List<ClienteEntity> obtenerClientes(final OpcionesOrdenacionCliente orden) {
         criteriaQuery.select(cliente).orderBy(criteriaBuilder.asc(cliente.get(orden.toString())));
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -96,7 +96,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return La lista con todas las distintas instancias del cliente indicado.
      */
     @Override
-    public List<ClienteEntity> find(final ClienteEntity cliente) {
+    public List<ClienteEntity> buscar(final ClienteEntity cliente) {
         Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), cliente.getDni());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
@@ -116,7 +116,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return La lista con la instancia del cliente seleccionada por su Id
      */
     @Override
-    public ClienteEntity findByPK(final Integer Id) {
+    public ClienteEntity buscarPorPK(final Integer Id) {
         Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id.intValue());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> cliente = entityManager.createQuery(criteriaQuery).getResultList();
@@ -136,7 +136,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      *                Método encargado de borrar todas las instancias del cliente con el DNI indicado de la base de datos.
      */
     @Override
-    public void remove(final ClienteEntity cliente) {
+    public void borrar(final ClienteEntity cliente) {
         Predicate condicion = criteriaBuilder.equal(this.cliente.get("dni"), cliente.getClienteId());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
@@ -160,7 +160,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      *           Método que borrar un cliente de la base de datos por su Id.
      */
     @Override
-    public void removeByPK(final Integer Id) {
+    public void borrarPorPK(final Integer Id) {
         Predicate condicion = criteriaBuilder.equal(this.cliente.get("clienteId"), Id.intValue());
         criteriaQuery.select(this.cliente).where(condicion);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
@@ -182,7 +182,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      *                Método encargado de editar un cliente buscandolo mediante su Id.
      */
     @Override
-    public void edit(final ClienteEntity cliente) {
+    public void editar(final ClienteEntity cliente) {
         String clienteId = "clienteId";
         Predicate condicion = criteriaBuilder.equal(this.cliente.get(clienteId), cliente.getClienteId());
 
@@ -208,7 +208,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * @return El número total de clientes que tenemos en la base de datos
      */
     @Override
-    public int count() {
+    public int contar() {
         criteriaQuery.select(cliente);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -225,7 +225,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      * Método encargado de borrar todos los clientes de la base de datos.
      */
     @Override
-    public void removeAll() {
+    public void borrarTodos() {
         criteriaQuery.select(this.cliente);
         List<ClienteEntity> clientes = entityManager.createQuery(criteriaQuery).getResultList();
 
@@ -242,6 +242,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
         }
     }
 
+
     /**
      * @param cliente         Cliente a modificar
      * @param todasInstancias Parámetro usado para conocer si realizar los cambios en una o todas las instancias de un cliente.
@@ -250,7 +251,7 @@ public class ClienteDAO implements IClienteDAO, Serializable {
      *                        Se puede modificar solo una instancia indicando por parámetro false, o todas, indicando por parámetro true.
      */
     @Override
-    public void editCliente(final ClienteEntity cliente, final boolean todasInstancias) {
+    public void editarCliente(final ClienteEntity cliente, final boolean todasInstancias) {
         String dni = "dni";
         String clienteId = "clienteId";
         Predicate condicion = (todasInstancias) ?

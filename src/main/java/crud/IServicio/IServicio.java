@@ -4,19 +4,26 @@ import crud.Excepciones.ClienteException;
 
 import java.util.List;
 
-public interface IServicio<T,PK> {
+/**
+ * @param <T>  Genérico referido a las entidades
+ * @param <PK> Genérico referido a las 'primary keys'
+ * @author Jose Maria
+ * <p>
+ * Interfaz IServicio
+ */
+public interface IServicio<T, PK> {
 
-    public void insert(T entity) throws ClienteException;
+    public void insertar(T entity) throws ClienteException;
 
-    public List<T> getAll();
+    public List<T> obtenerTodos();
 
-    public List<T> get(T... entity);
+    public List<T> obtener(T... entity);
 
-    public T getByPK(PK entityPK);
+    public T obtenerPorPK(PK entityPK);
 
-    public void remove(T entity);
+    public void borrar(T entity);
 
-    public void removeByPK(PK entityPK);
+    public void borrarPorPK(PK entityPK);
 
-    public void edit(T entity) throws  ClienteException;
+    public void editar(T entity) throws ClienteException;
 }

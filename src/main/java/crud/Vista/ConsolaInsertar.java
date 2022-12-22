@@ -9,8 +9,14 @@ import java.util.Scanner;
 
 import static crud.Vista.UtileriaValidaciones.*;
 
+/**
+ * @author Jose Maria
+ */
 public class ConsolaInsertar {
 
+    /**
+     * Método encargado de mostrar por pantalla el proceso de solicitud de datos e inserción del nuevo cliente
+     */
     public static void insertarClientes() {
         ClienteEntity clienteEntity = new ClienteEntity();
         Scanner sc = new Scanner(System.in);
@@ -99,10 +105,13 @@ public class ConsolaInsertar {
             clienteEntity.setCuotaMaxima(cuotaMax);
         }
 
-        try{
+        System.out.println("Cargando...");
+
+        try {
             Controlador.insertarCliente(clienteEntity);
-        } catch (ClienteException exception){
-            System.err.println("El cliente no se ha podido añadir por errores de validaciones.");
+            System.out.println("\u001B[32m" + "Cliente añadido a la base de datos." + "\u001B[0m");
+        } catch (ClienteException exception) {
+            System.err.println("No ha sido posible modificar el cliente: " + exception.getMessage());
         }
     }
 

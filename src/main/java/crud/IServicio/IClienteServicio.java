@@ -5,7 +5,12 @@ import crud.Otros.OpcionesOrdenacionCliente;
 
 import java.util.List;
 
-public interface IClienteServicio extends IServicio<ClienteEntity, Integer>{
+/**
+ * @author Jose Maria
+ * <p>
+ * Interfaz que extiende de IServicio pero que además contiene métodos mas propios de clientes
+ */
+public interface IClienteServicio extends IServicio<ClienteEntity, Integer> {
 
     //Método para recuperar todos los clientes ordenados por su fecha de alta o su DNI
     public List<ClienteEntity> getClientes(OpcionesOrdenacionCliente orden);

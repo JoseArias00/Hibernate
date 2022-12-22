@@ -1,8 +1,10 @@
 package crud.Excepciones;
 
-public class ClienteException extends Exception{
+/**
+ * @author Jose Maria
+ */
+public class ClienteException extends Exception {
     public ClienteException(String msg) {
         super(msg);
     }
-
 }

@@ -1,7 +1,6 @@
 package crud.Vista;
 
 import crud.Controlador.Controlador;
-import crud.Modelo.ClienteEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,12 +9,18 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * @author Jose Maria
+ */
 public class UtileriaValidaciones {
     private static final Logger LOGGER = LogManager.getLogger(Controlador.class);
 
+    /**
+     * @param opcion La opción elegida por el usuario
+     * @return True si la opción esta comprendida entre 1 y 6, false si no
+     */
     public static boolean validarAccion(final String opcion) {
         if (opcion != null) {
             String opciones = "[1-6]{1}$";
@@ -25,8 +30,12 @@ public class UtileriaValidaciones {
         return false;
     }
 
-    public static boolean validarOrden(final String opcion){
-        if(opcion != null){
+    /**
+     * @param opcion La opción elegida por el usuario
+     * @return True si el orden es "Fecha de alta" o "DNI", false si no
+     */
+    public static boolean validarOrden(final String opcion) {
+        if (opcion != null) {
             String opciones = "(Fecha de alta|DNI)$";
 
             return Pattern.matches(opciones, opcion);
@@ -34,6 +43,10 @@ public class UtileriaValidaciones {
         return false;
     }
 
+    /**
+     * @param opcion La opción elegida por el usuario
+     * @return True si la opción es 1 o 2, false si no lo es
+     */
     public static boolean validarAccionBorrar(final String opcion) {
         if (opcion != null) {
             String opciones = "[1-2]{1}$";
@@ -43,6 +56,10 @@ public class UtileriaValidaciones {
         return false;
     }
 
+    /**
+     * @param opcion La opción elegida por el usuario
+     * @return True si la opcion es Si o No, false si no es ninguna de ellas
+     */
     public static boolean validarSiNo(final String opcion) {
         if (opcion != null) {
             String opciones = "(Si|No)$";
@@ -52,15 +69,23 @@ public class UtileriaValidaciones {
         return false;
     }
 
-    public static boolean validarCampos(final String opcion){
+    /**
+     * @param opcion La opción elegida por el usuario
+     * @return True si la opcion esta comprendida entre 1 y 5, false si no
+     */
+    public static boolean validarCampos(final String opcion) {
         if (opcion != null) {
-            String opciones = "(1-5)$";
+            String opciones = "[1-5]$";
 
             return Pattern.matches(opciones, opcion);
         }
         return false;
     }
 
+    /**
+     * @param fechaAlta La fecha de alta a transformar a timeStamp según un formato
+     * @return La fecha de alta en timestamp
+     */
     public static Timestamp devolverFechaAlta(final String fechaAlta) {
         if (fechaAlta != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HHmmss");
@@ -81,8 +106,12 @@ public class UtileriaValidaciones {
         return null;
     }
 
+    /**
+     * @param fechaAlta La fecha de alta a validar
+     * @return True si la fecha de alta es válida, false si no lo és
+     */
     public static boolean validarFecha(final String fechaAlta) {
-        if (fechaAlta != null) {
+        if (fechaAlta.length() == 17 && fechaAlta != null) {
             String anio = "^\\d+";
             String anioBisiestos = "((01/([012][\\d]|3[01])|" +
                     "(02/([01][\\d]|2[0123456789]))|" +
@@ -121,6 +150,10 @@ public class UtileriaValidaciones {
         return false;
     }
 
+    /**
+     * @param tipo El tipo elegido por el usuario
+     * @return True si el tipo es 0 o 1, false si no es ninguno
+     */
     public static boolean validarTipo(final String tipo) {
         if (tipo != null) {
             String opciones = "[0,1]{1}$";
@@ -130,6 +163,10 @@ public class UtileriaValidaciones {
         return false;
     }
 
+    /**
+     * @param cuota La cuota máxima a validar
+     * @return True si es convertible a bid decimal y es correcta, false si no
+     */
     public static boolean validarCuota(final String cuota) {
         if (cuota != null) {
             try {
@@ -148,6 +185,11 @@ public class UtileriaValidaciones {
         return false;
     }
 
+    /**
+     * @param identificador El identificador a validar
+     * @return True si el identificador es válido y correcto, false si no
+     * @throws NullPointerException Ocurre cuando se le pasa un identificador nulo por parámetro
+     */
     public static boolean validarIdentificador(final String identificador) throws NullPointerException {
         if (identificador == null) {
             return false;
@@ -159,7 +201,6 @@ public class UtileriaValidaciones {
         String CIF = "^[a-zA-Z^IiÑñOoTtXxYyZz]([:digit:]{0,7}([abcdefghijABCDEFGHIJ]|[:digit:]))$";
         boolean correcto = false;
 
-        //TODO comprobar NIE
         if (Pattern.matches(DNI, identificador)) {
             if (validarLetraDNI(identificador)) {
                 correcto = true;

@@ -15,6 +15,14 @@ import java.util.List;
  */
 public class UtileriaClienteServicio {
 
+    /**
+     * Constantes para manejar los errores de validación
+     */
+    public static final String ERR_TIPO = "Tipo erroneo";
+    public static final String ERR_REPETIDO = "DNI repetido";
+    public static final String ERR_CLIENTE = "Cliente repetido";
+    public static final String ERR_CAMPO = "Campo invalido";
+
     private static final Logger LOGGER = LogManager.getLogger(UtileriaClienteServicio.class);
 
     /**
@@ -31,31 +39,64 @@ public class UtileriaClienteServicio {
     public static boolean validarCliente(final ClienteEntity cliente) throws ClienteException {
         if (camposValidos(cliente)) {
             if (!comprobarRepetecionCliente(cliente)) {
-                if (!identificadorRepetido(cliente)) {
+                if (!DNI_Repetido(cliente)) {
                     if (comprobarTipo(cliente)) {
                         return true;
                     } else {
                         if (LOGGER.isWarnEnabled()) {
                             LOGGER.warn("No se corresponde el tipo del cliente : " + cliente.getDni() + " con su cuota máxima asignada.");
                         }
+                        throw new ClienteException(ERR_TIPO);
                     }
                 } else {
                     if (LOGGER.isWarnEnabled()) {
-                        LOGGER.warn("Existe ya un cliente distinto con el identificador : " + cliente.getDni() + ".");
+                        LOGGER.warn("Existe ya un cliente distinto con el DNI : " + cliente.getDni() + ".");
                     }
+                    throw new ClienteException(ERR_REPETIDO);
                 }
             } else {
                 if (LOGGER.isWarnEnabled()) {
-                    LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " tiene otra instancia con los mismos datos en la base de datos.");
+                    LOGGER.warn("El cliente con DNI : " + cliente.getDni() + " tiene otra instancia con los mismos datos en la base de datos.");
                 }
+                throw new ClienteException(ERR_CLIENTE);
             }
-
         } else {
             if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn("El cliente con identificador : " + cliente.getDni() + " tiene mínimo un campo inválido.");
+                LOGGER.warn("El cliente con DNI : " + cliente.getDni() + " tiene mínimo un campo inválido.");
             }
+            throw new ClienteException(ERR_CAMPO);
         }
-        return false;
+
+    }
+
+    /**
+     * @param cliente Cliente que queremos validar de forma completa para su futura edición
+     * @return Si el cliente es correcto después de ser validado para modificarse en la base de datos
+     * @throws ClienteException Ocurre cuando al crear un cliente no pasa las validaciones relacionadas con la base de datos
+     */
+    public static boolean validarEdicionCliente(final ClienteEntity cliente) throws ClienteException {
+        if (camposValidos(cliente)) {
+            if (!comprobarRepetecionCliente(cliente)) {
+                if (comprobarTipo(cliente)) {
+                    return true;
+                } else {
+                    if (LOGGER.isWarnEnabled()) {
+                        LOGGER.warn("No se corresponde el tipo del cliente : " + cliente.getDni() + " con su cuota máxima asignada.");
+                    }
+                    throw new ClienteException(ERR_TIPO);
+                }
+            } else {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("El cliente con DNI : " + cliente.getDni() + " tiene otra instancia con los mismos datos en la base de datos.");
+                }
+                throw new ClienteException(ERR_CLIENTE);
+            }
+        } else {
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("El cliente con DNI : " + cliente.getDni() + " tiene mínimo un campo inválido.");
+            }
+            throw new ClienteException(ERR_CAMPO);
+        }
     }
 
     /**
@@ -95,7 +136,7 @@ public class UtileriaClienteServicio {
     public static boolean comprobarRepetecionCliente(final ClienteEntity cliente) {
         if (camposValidos(cliente)) {
             ClienteDAO clienteDAO = new ClienteDAO();
-            List<ClienteEntity> clientesBaseDatos = clienteDAO.findAll();
+            List<ClienteEntity> clientesBaseDatos = clienteDAO.buscarTodos();
 
             for (ClienteEntity contadorClientesBD : clientesBaseDatos) {
                 if (contadorClientesBD.getDni().equalsIgnoreCase(cliente.getDni()) &&
@@ -121,13 +162,13 @@ public class UtileriaClienteServicio {
      * @return True si está repetido, y false si no lo está
      * @throws NullPointerException Ocurre cuando el cliente pasado por parámetro es nulo
      */
-    public static boolean identificadorRepetido(final ClienteEntity cliente) throws NullPointerException {
+    public static boolean DNI_Repetido(final ClienteEntity cliente) throws NullPointerException {
         if (cliente.equals(null)) {
             throw new NullPointerException("El cliente pasado por parámetro es nulo.");
         }
         if (camposValidos(cliente)) {
             ClienteDAO clienteDAO = new ClienteDAO();
-            List<ClienteEntity> clientesBaseDatos = clienteDAO.find(cliente);
+            List<ClienteEntity> clientesBaseDatos = clienteDAO.buscar(cliente);
 
             for (ClienteEntity contadorClientes : clientesBaseDatos) {
                 if (!contadorClientes.getNombre().equals(cliente.getNombre()) || !contadorClientes.getApellidos().equals(cliente.getApellidos())) {
@@ -143,7 +184,7 @@ public class UtileriaClienteServicio {
      * @param cliente El cliente que queremos comprobar su cuota máxima en relacion con el tipo de cliente que es
      * @return Si se corresponde el valor de la cuota con el tipo de cliente que es
      * @throws ClienteException Ocurre cuando se crea un cliente de tipo Socio con una couta maxima, o
-     *                              un cliente de tipo registrado sin cuota máxima
+     *                          un cliente de tipo registrado sin cuota máxima
      */
     public static boolean comprobarTipo(final ClienteEntity cliente) throws ClienteException {
         if (cliente.getTipo() == 1 && cliente.getCuotaMaxima() != null) {

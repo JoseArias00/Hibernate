@@ -27,11 +27,11 @@ public class ClienteServicio implements IClienteServicio {
      * @see UtileriaClienteServicio El método validar cliente
      */
     @Override
-    public void insert(final ClienteEntity cliente) throws ClienteException {
+    public void insertar(final ClienteEntity cliente) throws ClienteException {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         if (validarCliente(cliente)) {
-            clienteDAO.insert(cliente);
+            clienteDAO.insertar(cliente);
 
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Añadido el cliente a la base de datos.");
@@ -49,14 +49,14 @@ public class ClienteServicio implements IClienteServicio {
      * @return Lista con todos los clientes registrados en el momento de la consulta en la base de datos
      */
     @Override
-    public List<ClienteEntity> getAll() {
+    public List<ClienteEntity> obtenerTodos() {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Recuperados todos los clientes.");
         }
 
-        return clienteDAO.findAll();
+        return clienteDAO.buscarTodos();
     }
 
     /**
@@ -78,7 +78,7 @@ public class ClienteServicio implements IClienteServicio {
         }
 
 
-        return clienteDAO.getClientes(orden);
+        return clienteDAO.obtenerClientes(orden);
     }
 
     /**
@@ -87,7 +87,7 @@ public class ClienteServicio implements IClienteServicio {
      * @throws NullPointerException Ocurre cuando se pasa un identificador nulo por parámetro
      */
     @Override
-    public List<ClienteEntity> get(final ClienteEntity... cliente) throws NullPointerException {
+    public List<ClienteEntity> obtener(final ClienteEntity... cliente) throws NullPointerException {
         if (cliente == null) {
             throw new NullPointerException("El cliente pasado por parámetro es nulo.");
         }
@@ -100,7 +100,7 @@ public class ClienteServicio implements IClienteServicio {
         }
 
         for (ClienteEntity clienteEntity : cliente) {
-            clientes.addAll(clienteDAO.find(clienteEntity));
+            clientes.addAll(clienteDAO.buscar(clienteEntity));
         }
 
         return clientes;
@@ -112,7 +112,7 @@ public class ClienteServicio implements IClienteServicio {
      * @throws NullPointerException Ocurre cuando se pasa un Id nulo por parámetro
      */
     @Override
-    public ClienteEntity getByPK(final Integer id) throws NullPointerException {
+    public ClienteEntity obtenerPorPK(final Integer id) throws NullPointerException {
         if (id == null) {
             throw new NullPointerException("El Id pasado por parámetro es nulo.");
         }
@@ -123,7 +123,7 @@ public class ClienteServicio implements IClienteServicio {
             LOGGER.info("Recuperados todos los clientes indicados.");
         }
 
-        return clienteDAO.findByPK(id);
+        return clienteDAO.buscarPorPK(id);
     }
 
     /**
@@ -131,14 +131,14 @@ public class ClienteServicio implements IClienteServicio {
      * @throws NullPointerException Ocurre cuando se pasa un identificador nulo por parámetro
      */
     @Override
-    public void remove(final ClienteEntity cliente) throws NullPointerException {
+    public void borrar(final ClienteEntity cliente) throws NullPointerException {
         if (cliente == null) {
             throw new NullPointerException("El identificador pasado por parámetro es nulo.");
         }
 
         ClienteDAO clienteDAO = new ClienteDAO();
 
-        clienteDAO.remove(cliente);
+        clienteDAO.borrar(cliente);
 
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Borrados todos los clientes indicados.");
@@ -150,7 +150,7 @@ public class ClienteServicio implements IClienteServicio {
      * @throws NullPointerException Ocurre cuando se pasa un Id nulo por parámetro
      */
     @Override
-    public void removeByPK(final Integer id) throws NullPointerException {
+    public void borrarPorPK(final Integer id) throws NullPointerException {
         if (id == null) {
             throw new NullPointerException("El identificador pasado por parámetro es nulo.");
         }
@@ -161,7 +161,7 @@ public class ClienteServicio implements IClienteServicio {
             LOGGER.info("Borrados todos los clientes indicados.");
         }
 
-        clienteDAO.removeByPK(id);
+        clienteDAO.borrarPorPK(id);
     }
 
     /**
@@ -169,11 +169,11 @@ public class ClienteServicio implements IClienteServicio {
      * @throws ClienteException Ocurre cuando el cliente no pasa las validaciones pertinentes
      */
     @Override
-    public void edit(final ClienteEntity cliente) throws ClienteException {
+    public void editar(final ClienteEntity cliente) throws ClienteException {
         ClienteDAO clienteDAO = new ClienteDAO();
 
         if (validarCliente(cliente)) {
-            clienteDAO.edit(cliente);
+            clienteDAO.editar(cliente);
         }
 
         if (LOGGER.isInfoEnabled()) {
