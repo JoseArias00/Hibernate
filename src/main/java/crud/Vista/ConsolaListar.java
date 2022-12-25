@@ -3,6 +3,7 @@ package crud.Vista;
 import crud.Controlador.Controlador;
 import crud.Controlador.ControladorValidaciones;
 import crud.Modelo.ClienteEntity;
+import crud.Otros.Constantes.ConstantesConsola;
 import crud.Otros.Enumeraciones.OpcionesOrdenacionCliente;
 
 import java.util.List;
@@ -18,20 +19,21 @@ public class ConsolaListar {
      * Método encargado de mostrar por pantalla el proceso para listar los clientes de la base de datos actuales
      */
     public static void listarClientes() {
-        String Si = "Si";
+        String si = "Si";
+        String no = "No";
         Scanner sc = new Scanner(System.in);
         System.out.println("¿Desea ordenar la lista?(Si,No)");
 
         String respuesta = sc.nextLine();
 
-        while (!ControladorValidaciones.validarSiNo(respuesta)) {
-            System.err.println("Por favor, introduzca únicamente 'Si' o 'No.");
+        while (!ControladorValidaciones.validarSiNo(respuesta) && !ConstantesConsola.EXIT.equals(respuesta)) {
+            System.err.println("Por favor, introduzca únicamente 'Si' o 'No'.");
             respuesta = sc.nextLine();
         }
 
-        if (respuesta.equals(Si)) {
+        if (si.equals(respuesta)) {
             listarOrdenado();
-        } else {
+        } else if (no.equals(respuesta)){
             listarDesordenado();
         }
     }

@@ -171,7 +171,7 @@ public class UtileriaClienteServicio {
             List<ClienteEntity> clientesBaseDatos = clienteDAO.buscar(cliente);
 
             for (ClienteEntity contadorClientes : clientesBaseDatos) {
-                if (!contadorClientes.getNombre().equals(cliente.getNombre()) || !contadorClientes.getApellidos().equals(cliente.getApellidos())) {
+                if (!contadorClientes.getNombre().equalsIgnoreCase(cliente.getNombre()) || !contadorClientes.getApellidos().equalsIgnoreCase(cliente.getApellidos())) {
                     return true;
                 }
             }
