@@ -1,4 +1,4 @@
-import crud.Excepciones.ClienteException;
+import crud.Otros.Excepciones.ClienteException;
 import crud.Vista.ConsolaPrincipal;
 
 /**

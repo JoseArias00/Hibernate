@@ -1,4 +1,4 @@
-package crud.Excepciones;
+package crud.Otros.Excepciones;
 
 /**
  * @author Jose Maria

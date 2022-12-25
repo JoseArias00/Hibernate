@@ -1,13 +1,13 @@
 package crud.Vista;
 
 import crud.Controlador.Controlador;
-import crud.Excepciones.ClienteException;
+import crud.Controlador.ControladorValidaciones;
+import crud.Otros.Constantes.ConstantesConsola;
+import crud.Otros.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
-
-import static crud.Vista.UtileriaValidaciones.*;
 
 /**
  * @author Jose Maria
@@ -18,27 +18,32 @@ public class ConsolaInsertar {
      * Método encargado de mostrar por pantalla el proceso de solicitud de datos e inserción del nuevo cliente
      */
     public static void insertarClientes() {
+        String vacio = "";
         ClienteEntity clienteEntity = new ClienteEntity();
         Scanner sc = new Scanner(System.in);
 
         //Asignamos el identificador del cliente
         System.out.println("Introduzca el DNI/NIE/CIF del cliente:");
 
-        String identificador = sc.nextLine();
+        String DNI = sc.nextLine();
 
-        while (!validarIdentificador(identificador)) {
+        while (!ControladorValidaciones.validarDNI(DNI)) {
+            if (!ConstantesConsola.EXIT.equals(DNI)) {
+
+            }
             System.err.println("El DNI/NIE/CIF no puede ser nulo, por favor, introdúzcalo de nuevo:");
-            identificador = sc.nextLine();
+            DNI = sc.nextLine();
         }
 
-        clienteEntity.setDni(identificador);
+
+        clienteEntity.setDni(DNI);
 
         //Asignamos el nombre del cliente
         System.out.println("Introduzca el nombre del cliente:");
 
         String nombre = sc.nextLine();
 
-        while (nombre.equals("")) {
+        while (vacio.equals(nombre)) {
             System.err.println("El nombre no puede ser nulo, por favor, introdúzcalo de nuevo:");
             nombre = sc.nextLine();
         }
@@ -50,7 +55,7 @@ public class ConsolaInsertar {
 
         String apellidos = sc.nextLine();
 
-        while (apellidos.equals("")) {
+        while (vacio.equals(apellidos)) {
             System.err.println("Los apellidos no puede ser nulo, por favor, introdúzcalo de nuevo:");
 
             apellidos = sc.nextLine();
@@ -64,23 +69,22 @@ public class ConsolaInsertar {
 
         String fechaAlta = sc.nextLine();
 
-        while (!validarFecha(fechaAlta)) {
+        while (!ControladorValidaciones.validarFecha(fechaAlta)) {
             System.err.println("Introduzca la fecha de alta del cliente (yyyy/MM/dd HHmmss):");
 
             fechaAlta = sc.nextLine();
         }
 
-        clienteEntity.setFechaAlta(devolverFechaAlta(fechaAlta));
+        clienteEntity.setFechaAlta(Controlador.devolverFechaAlta(fechaAlta));
 
         //Asignamos el tipo de cliente
         System.out.println("Introduzca el tipo del cliente:"
                 + "\n0.Registrado"
                 + "\n1.Socio");
 
-
         String tipo = sc.nextLine();
 
-        while (!validarTipo(tipo)) {
+        while (!ControladorValidaciones.validarTipo(tipo)) {
             System.err.println("El tipo no es válido, por favor, introdúzcalo de nuevo:");
 
             tipo = sc.nextLine();
@@ -95,7 +99,7 @@ public class ConsolaInsertar {
 
             String cuota = sc.nextLine();
 
-            while (!validarCuota(cuota)) {
+            while (!ControladorValidaciones.validarCuota(cuota)) {
                 System.err.println("La cuota máxima no es válida, por favor, introdúzcala de nuevo:");
 
                 cuota = sc.nextLine();

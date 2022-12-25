@@ -1,6 +1,5 @@
-package crud.Vista;
+package crud.Servicio;
 
-import crud.Controlador.Controlador;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +14,7 @@ import java.util.regex.Pattern;
  * @author Jose Maria
  */
 public class UtileriaValidaciones {
-    private static final Logger LOGGER = LogManager.getLogger(Controlador.class);
+    private static final Logger LOGGER = LogManager.getLogger(ClienteServicio.class);
 
     /**
      * @param opcion La opción elegida por el usuario

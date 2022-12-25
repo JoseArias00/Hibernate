@@ -2,7 +2,7 @@ package crud.DAO;
 
 import crud.IDAO.IClienteDAO;
 import crud.Modelo.ClienteEntity;
-import crud.Otros.OpcionesOrdenacionCliente;
+import crud.Otros.Enumeraciones.OpcionesOrdenacionCliente;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

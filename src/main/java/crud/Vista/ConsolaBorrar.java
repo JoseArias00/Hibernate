@@ -1,6 +1,7 @@
 package crud.Vista;
 
 import crud.Controlador.Controlador;
+import crud.Controlador.ControladorValidaciones;
 import crud.Modelo.ClienteEntity;
 
 import java.util.HashMap;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import static crud.Controlador.Controlador.consultarPorDNI;
-import static crud.Vista.UtileriaValidaciones.*;
 
 /**
  * @author Jose Maria
@@ -45,7 +45,7 @@ public class ConsolaBorrar {
 
         String opcion = sc.nextLine();
 
-        while (!validarAccionBorrar(opcion)) {
+        while (!ControladorValidaciones.validarAccion(opcion)) {
             System.err.println("Introduzca una opción válida.");
 
             opcion = sc.nextLine();

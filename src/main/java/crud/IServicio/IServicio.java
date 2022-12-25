@@ -1,6 +1,6 @@
 package crud.IServicio;
 
-import crud.Excepciones.ClienteException;
+import crud.Otros.Excepciones.ClienteException;
 
 import java.util.List;
 

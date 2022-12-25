@@ -1,7 +1,7 @@
 package crud.Servicio;
 
 import crud.DAO.ClienteDAO;
-import crud.Excepciones.ClienteException;
+import crud.Otros.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

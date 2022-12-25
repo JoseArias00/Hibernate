@@ -1,11 +1,13 @@
 package crud.Controlador;
 
-import crud.Excepciones.ClienteException;
+import crud.Otros.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
-import crud.Otros.OpcionesOrdenacionCliente;
+import crud.Otros.Enumeraciones.OpcionesOrdenacionCliente;
 import crud.Servicio.ClienteServicio;
 import crud.Servicio.UtileriaClienteServicio;
+import crud.Servicio.UtileriaValidaciones;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -25,6 +27,18 @@ public class Controlador {
 
         ClienteServicio clienteServicio = new ClienteServicio();
         clienteServicio.insertar(cliente);
+    }
+
+    /**
+     * @param fechaAlta String con el formato de fecha que queremos obtener
+     * @return La fecha pasada como String como Timestamp
+     */
+    public static Timestamp devolverFechaAlta(final String fechaAlta) {
+        if (fechaAlta != null) {
+            return UtileriaValidaciones.devolverFechaAlta(fechaAlta);
+        } else {
+            return null;
+        }
     }
 
     /**

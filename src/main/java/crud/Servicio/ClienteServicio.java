@@ -3,11 +3,11 @@ package crud.Servicio;
 import static crud.Servicio.UtileriaClienteServicio.*;
 
 import crud.DAO.ClienteDAO;
-import crud.Excepciones.ClienteException;
+import crud.Otros.Excepciones.ClienteException;
 import crud.IServicio.IClienteServicio;
 import crud.Modelo.ClienteEntity;
 
-import crud.Otros.OpcionesOrdenacionCliente;
+import crud.Otros.Enumeraciones.OpcionesOrdenacionCliente;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

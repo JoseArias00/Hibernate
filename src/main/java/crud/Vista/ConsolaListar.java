@@ -1,14 +1,13 @@
 package crud.Vista;
 
 import crud.Controlador.Controlador;
+import crud.Controlador.ControladorValidaciones;
 import crud.Modelo.ClienteEntity;
-import crud.Otros.OpcionesOrdenacionCliente;
+import crud.Otros.Enumeraciones.OpcionesOrdenacionCliente;
 
 import java.util.List;
 import java.util.Scanner;
 
-import static crud.Vista.UtileriaValidaciones.validarOrden;
-import static crud.Vista.UtileriaValidaciones.validarSiNo;
 
 /**
  * @author Jose Maria
@@ -25,7 +24,7 @@ public class ConsolaListar {
 
         String respuesta = sc.nextLine();
 
-        while (!validarSiNo(respuesta)) {
+        while (!ControladorValidaciones.validarSiNo(respuesta)) {
             System.err.println("Por favor, introduzca únicamente 'Si' o 'No.");
             respuesta = sc.nextLine();
         }
@@ -60,7 +59,7 @@ public class ConsolaListar {
 
         String orden = sc.nextLine();
 
-        while (!validarOrden(orden)) {
+        while (!ControladorValidaciones.validarOrden(orden)) {
             System.err.println("Introduzca 'Fecha de alta' o 'DNI' para ordenar");
 
             orden = sc.nextLine();

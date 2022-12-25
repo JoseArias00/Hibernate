@@ -1,10 +1,9 @@
 package crud.Vista;
 
-import crud.Excepciones.ClienteException;
+import crud.Controlador.ControladorValidaciones;
 
 import java.util.Scanner;
 
-import static crud.Vista.UtileriaValidaciones.validarAccion;
 
 /**
  * @author Jose Maria
@@ -12,9 +11,7 @@ import static crud.Vista.UtileriaValidaciones.validarAccion;
 public class ConsolaPrincipal {
 
     /**
-     * @throws ClienteException Ocurre cuando al modificar o insertar un cliente hay errores en su validación
-     *                          <p>
-     *                          Método inicial que muestra todas la acciones posibles a realizar en la aplicación
+     * Método inicial que muestra todas la acciones posibles a realizar en la aplicación
      */
     public static void inicio() {
         Scanner sc = new Scanner(System.in);
@@ -22,6 +19,8 @@ public class ConsolaPrincipal {
         String salir = "6";
 
         System.out.println("Bienvenido al programa CRUD.");
+        System.out.println("Introduzca el comando /exit para volver al menú principal.");
+
         do {
             System.out.println("Que acción desea realizar: "
                     + "\n1.Añadir cliente"
@@ -33,7 +32,7 @@ public class ConsolaPrincipal {
 
             opcion = sc.nextLine();
 
-            while (!validarAccion(opcion)) {
+            while (!ControladorValidaciones.validarAcciones(opcion)) {
                 System.err.println("Por favor, seleccione una de las opciones indicadas.");
                 opcion = sc.nextLine();
             }

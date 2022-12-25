@@ -1,14 +1,13 @@
 package crud.Vista;
 
 import crud.Controlador.Controlador;
-import crud.Excepciones.ClienteException;
+import crud.Controlador.ControladorValidaciones;
+import crud.Otros.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
-
-import static crud.Vista.UtileriaValidaciones.*;
 
 /**
  * @author Jose Maria
@@ -47,7 +46,7 @@ public class ConsolaEditar {
             String siNo;
             siNo = sc.nextLine();
 
-            while (!validarSiNo(siNo)) {
+            while (!ControladorValidaciones.validarSiNo(siNo)) {
                 System.err.println("Introduzca 'Si' o 'No'");
 
                 siNo = sc.nextLine();
@@ -79,7 +78,7 @@ public class ConsolaEditar {
 
         String opcion = sc.nextLine();
 
-        while (!validarCampos(opcion)) {
+        while (!ControladorValidaciones.validarCampos(opcion)) {
             System.err.println("Introduzca el número de un campo válido");
 
             opcion = sc.nextLine();
@@ -116,7 +115,7 @@ public class ConsolaEditar {
 
             String cuota = sc.nextLine();
 
-            while (!validarCuota(cuota)) {
+            while (!ControladorValidaciones.validarCuota(cuota)) {
                 System.err.println("La cuota máxima no es válida, por favor, introdúzcala de nuevo:");
 
                 cuota = sc.nextLine();
@@ -139,7 +138,7 @@ public class ConsolaEditar {
 
         String tipo = sc.nextLine();
 
-        while (!validarTipo(tipo)) {
+        while (!ControladorValidaciones.validarTipo(tipo)) {
             System.err.println("El tipo no es válido, por favor, introdúzcalo de nuevo:");
 
             tipo = sc.nextLine();
@@ -156,13 +155,13 @@ public class ConsolaEditar {
         System.out.println("Introduzca la nueva fecha de alta del cliente (yyyy/MM/dd HHmmss):");
         String fechaAlta = sc.nextLine();
 
-        while (!validarFecha(fechaAlta)) {
+        while (!ControladorValidaciones.validarFecha(fechaAlta)) {
             System.err.println("Introduzca una fecha de alta del cliente válida(yyyy/MM/dd HHmmss):");
 
             fechaAlta = sc.nextLine();
         }
 
-        cliente.setFechaAlta(devolverFechaAlta(fechaAlta));
+        cliente.setFechaAlta(Controlador.devolverFechaAlta(fechaAlta));
     }
 
     /**

@@ -1,4 +1,4 @@
-package crud.Otros;
+package crud.Otros.Enumeraciones;
 
 /**
  * @author Jose Maria
