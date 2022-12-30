@@ -6,6 +6,7 @@ import crud.Otros.Excepciones.ClienteException;
 import crud.Modelo.ClienteEntity;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,15 +29,15 @@ public class ConsolaEditar {
 
         System.out.println("Que cliente desea modificar, introduzca su número");
 
-        int numeroCliente = sc.nextInt();
+        BigInteger numeroCliente = sc.nextBigInteger();
 
-        while (numeroCliente < 0 || numeroCliente > clientes.size()) {
+        while (numeroCliente.compareTo(BigInteger.valueOf(0)) < 0 || numeroCliente.compareTo(BigInteger.valueOf(clientes.size())) > 0) {
             System.err.println("Por favor,introduzca un número de cliente");
 
-            numeroCliente = sc.nextInt();
+            numeroCliente = sc.nextBigInteger();
         }
 
-        cliente = clientes.get(numeroCliente - 1);
+        cliente = clientes.get(Integer.valueOf(String.valueOf(numeroCliente.subtract(BigInteger.valueOf(1)))));
         boolean seguir;
         String si = "Si";
 

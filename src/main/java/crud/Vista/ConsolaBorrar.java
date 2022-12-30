@@ -4,6 +4,7 @@ import crud.Controlador.Controlador;
 import crud.Controlador.ControladorValidaciones;
 import crud.Modelo.ClienteEntity;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -72,12 +73,12 @@ public class ConsolaBorrar {
     private static void borrarUnaInstancia(final HashMap<Integer, ClienteEntity> clientes) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Introduzca el número de la instancia que desea borrar: ");
-        int numero = sc.nextInt();
+        BigInteger numero = sc.nextBigInteger();
 
-        while (numero < 0 || numero > clientes.size()) {
+        while (numero.compareTo(BigInteger.valueOf(0)) < 0 || numero.compareTo(BigInteger.valueOf(clientes.size())) > 0) {
             System.err.println("Introduzca una opción válida.");
 
-            numero = sc.nextInt();
+            numero = sc.nextBigInteger();
         }
 
         Controlador.borrarCliente(clientes.get(numero));
